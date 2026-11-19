@@ -1,6 +1,6 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import {seedData,validateData,migrateData,addDays,weekdayIndex,mondayOf,resolveDay,materializeDay,snapshotWeek} from '../lib/planner.mjs';
+import {seedData,legacySeedData,validateData,migrateData,addDays,weekdayIndex,mondayOf,resolveDay,materializeDay,snapshotWeek} from '../lib/planner.mjs';
 
 function enabledCycle() {
   const data=seedData();
@@ -12,7 +12,7 @@ function enabledCycle() {
 }
 
 function legacyFixture() {
-  const v2=seedData();
+  const v2=migrateData(legacySeedData());
   const data={version:1,timezone:v2.timezone,tasks:v2.tasks,templates:v2.templates,days:{}};
   data.days['2026-11-14']=[{id:'existing-dated-event',taskId:'task-read',title:'保留的日程',start:600,duration:60,category:'learn',done:true}];
   return data;

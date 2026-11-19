@@ -98,14 +98,14 @@ test('live timer contributes only elapsed time in the visible day and paused tim
 test('empty days yield zero totals and readable empty states without invalid percentages',()=>{
   const d=data();assert.deepEqual(dailyTaskShares({data:d,date},helpers),{source:'plan',totalMinutes:0,items:[],tags:[]});
   const html=renderTimeShares({data:d,date,viewMode:'compare'},helpers);
-  assert.match(html,/当天还没有安排任务/);assert.match(html,/当天还没有实际记录/);
+  assert.match(html,/当天还没有安排任务/);assert.match(html,/当天还没有执行记录/);
   assert.equal(/NaN|Infinity|undefined/.test(html),false);
 });
 
 test('rendered rows escape titles, retain every task and distinguish plan and actual shares',()=>{
   const d=data(),blocks=Array.from({length:12},(_,i)=>block('task-'+i,30,{title:'任务 '+i+' <script>'}));
   const html=renderTimeShares({data:d,blocks,date,viewMode:'compare',compact:true},helpers);
-  assert.match(html,/计划耗时占比/);assert.match(html,/实际耗时占比/);
+  assert.match(html,/计划耗时占比/);assert.match(html,/执行耗时占比/);
   assert.equal((html.match(/data-shares-breakdown="tasks">([\s\S]*?)<\/ol>/)[1].match(/<li>/g)||[]).length,12);
   assert.equal((html.match(/data-shares-breakdown="tags">([\s\S]*?)<\/ol>/)[1].match(/<li>/g)||[]).length,1);
   assert.match(html,/任务 11 &lt;script&gt;/);assert.equal(html.includes('<script>'),false);
@@ -117,5 +117,5 @@ test('templates always show planned shares and never read actual records',()=>{
   let actualReads=0;
   const html=renderTimeShares({data:data(),blocks:[block('reading')],date,viewMode:'actual',template:true},{...helpers,actualSegments:()=>{actualReads++;return[];}});
   assert.equal(actualReads,0);assert.match(html,/计划耗时占比/);assert.match(html,/100%/);
-  assert.equal(html.includes('实际耗时占比'),false);assert.match(html,/data-shares-template="true"/);
+  assert.equal(html.includes('执行耗时占比'),false);assert.match(html,/data-shares-template="true"/);
 });

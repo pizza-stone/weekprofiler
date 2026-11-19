@@ -2,11 +2,11 @@ import test from 'node:test';
 import assert from 'node:assert/strict';
 import { DatabaseSync } from 'node:sqlite';
 import { readFileSync } from 'node:fs';
-import { MAX_TEMPLATE_NOTES, seedData, validateData, migrateData, snapshotWeek } from '../lib/planner.mjs';
+import { MAX_TEMPLATE_NOTES, seedData, legacySeedData, validateData, migrateData, snapshotWeek } from '../lib/planner.mjs';
 import { handlePlanner } from '../worker/api.mjs';
 
 function fixture(version) {
-  const data = seedData();
+  const data = migrateData(legacySeedData());
   data.version = version;
   if (version === 1) {
     delete data.groups;

@@ -3,7 +3,7 @@ import assert from 'node:assert/strict';
 import vm from 'node:vm';
 import { readFileSync } from 'node:fs';
 import { DatabaseSync } from 'node:sqlite';
-import { seedData, validateData, migrateData, resolveDay, materializeDay, mondayOf, addDays } from '../lib/planner.mjs';
+import { seedData, legacySeedData, validateData, migrateData, resolveDay, materializeDay, mondayOf, addDays } from '../lib/planner.mjs';
 import { startTracking, pauseTracking, resumeTracking, stopTracking } from '../lib/tracking.mjs';
 import { validateAIContext, validateAIProposal } from '../lib/ai-planner.mjs';
 import { handlePlanner } from '../worker/api.mjs';
@@ -24,7 +24,7 @@ function trackedData() {
 }
 
 function legacyData(version) {
-  const data = seedData();
+  const data = migrateData(legacySeedData());
   data.version = version;
   if (version === 1) {
     delete data.groups;

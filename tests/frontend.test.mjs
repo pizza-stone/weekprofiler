@@ -19,13 +19,13 @@ test('next-day clock labels and calendar exports agree on the 04:00 end boundary
  assert.equal(h.utcDate('2026-11-14',1680,'Asia/Shanghai'),'20261114T200000Z');
 });
 import { readFileSync } from 'node:fs';
-import { seedData, validateData, migrateData, resolveDay, materializeDay, snapshotWeek, mondayOf, addDays, MAX_STATE_BYTES, MAX_TEMPLATE_NOTES, DAY_START, DAY_END, planningDate, tagForItem, effectiveTagId } from '../lib/planner.mjs';
+import { seedData, validateData, migrateData, installStarterTemplates, resolveDay, materializeDay, snapshotWeek, mondayOf, addDays, MAX_STATE_BYTES, MAX_TEMPLATE_NOTES, DAY_START, DAY_END, planningDate, tagForItem, effectiveTagId } from '../lib/planner.mjs';
 
 function harness(fetch) {
   const listeners = {};
   const modal = { open: false, close() { this.open=false; } };
   const context = vm.createContext({
-    seedData, validateData, migrateData, resolveDay, materializeDay, snapshotWeek, mondayOf, addDays, MAX_STATE_BYTES, MAX_TEMPLATE_NOTES, DAY_START, DAY_END, planningDate, tagForItem, effectiveTagId, trackingModel, createTrackingUI, renderTimeShares, refreshPlanLinks, TextEncoder, Intl, Date, URL, Blob,
+    seedData, validateData, migrateData, installStarterTemplates, resolveDay, materializeDay, snapshotWeek, mondayOf, addDays, MAX_STATE_BYTES, MAX_TEMPLATE_NOTES, DAY_START, DAY_END, planningDate, tagForItem, effectiveTagId, trackingModel, createTrackingUI, renderTimeShares, refreshPlanLinks, TextEncoder, Intl, Date, URL, Blob,
     FormData: class { constructor(form) { this.values=form.values; } get(key) { return this.values[key]??null; } },
     Uint8Array, crypto: { getRandomValues: array => crypto.getRandomValues(array) },
     document: {
@@ -59,6 +59,79 @@ test('weekly statistics and individual day details toggle without editing or sav
  assert.deepEqual([...h.state.weekDetailDays],['2026-11-17']);
  assert.equal(JSON.stringify(h.state.data),before);
  assert.equal(h.state.dirty,false);assert.equal(h.state.undo.length,0);
+});
+
+test('creating a day or week template offers the examples without modifying data until explicitly selected',async()=>{
+ const h=harness(),custom={id:'my-day',name:'自己的创作日',description:'我的模板',blocks:[]};
+ h.state.tab='templates';h.state.date='2026-11-16';h.state.data.templates=[custom];h.state.data.weekTemplates=[];h.state.data.tasks=[];
+ const before=structuredClone(h.state.data);
+ const click=(action,kind)=>h.listeners.click[0]({target:{closest:()=>({dataset:{action,kind}})}});
+ for(const [kind,action] of [['day','new-template'],['week','new-week-template']]){
+   await click(action);
+   assert.match(h.context.lastModal.content,new RegExp('</form>[\\s\\S]+data-action="add-starter-templates"[^>]*type="button" data-kind="'+kind+'"'));
+   assert.deepEqual(h.state.data,before);assert.equal(h.state.undo.length,0);
+ }
+ await click('add-starter-templates','day');
+ const addedDay=h.state.data.templates.find(t=>t.id===h.state.templateId);
+ assert.equal(addedDay.name,'创作日');assert.equal(h.state.templateKind,'day');assert.equal(h.state.weekTemplateId,null);
+ assert.deepEqual(structuredClone(h.state.data.templates.find(t=>t.id===custom.id)),custom);
+ assert.deepEqual(structuredClone(h.state.data.days),before.days);assert.deepEqual(structuredClone(h.state.data.cycle),before.cycle);
+ assert.equal(h.state.undo.length,1);assert.equal(h.state.dirty,true);
+ addedDay.name='我改过的示例';
+ const installed=JSON.stringify(h.state.data);
+ h.state.dirty=false;
+ await click('add-starter-templates','week');
+ assert.equal(h.state.data.weekTemplates.find(t=>t.id===h.state.weekTemplateId).name,'创作周');assert.equal(h.state.templateId,null);
+ assert.equal(h.state.templateKind,'week');assert.equal(JSON.stringify(h.state.data),installed);
+ assert.equal(h.state.dirty,false);assert.equal(h.state.undo.length,1);
+});
+
+test('copying an installed template gives the editable copy its own identity',async()=>{
+ const h=harness();
+ for(const [collection,kind,action] of [['templates','creative-day','copy-template'],['weekTemplates','creative-week','copy-week-template']]){
+   const items=h.state.data[collection],original=items.find(t=>t.starterExample===kind);
+   await h.listeners.click[0]({target:{closest:()=>({dataset:{action,id:original.id}})}});
+   const copy=items.at(-1);assert.notEqual(copy.id,original.id);assert.equal(copy.starterExample,undefined);
+   assert.equal(original.starterExample,kind);assert.match(copy.name,/副本$/);
+ }
+});
+
+test('opening the week on mobile selects the planning day while desktop retains an explicit date',()=>{
+ const h=harness(),lastDate='2026-11-10';
+ const frozen=Date.parse('2026-11-20T03:30:00+08:00');
+ h.context.Date=class extends Date {constructor(...args){super(...(args.length?args:[frozen]));}};
+ const tab={dataset:{action:'tab',id:'week'}};
+ for(const mobile of [true,false]){
+   h.state.tab='day';h.state.date=lastDate;
+   h.context.window.matchMedia=()=>({matches:mobile});
+   h.dispatch('click',{target:{closest:selector=>selector==='[data-action]'?tab:null}});
+   assert.equal(h.state.date,mobile?'2026-11-19':lastDate);
+ }
+});
+
+test('weekly pager tracks snapped days without redrawing, and guards invalid calendar input',()=>{
+ const h=harness(),monday='2026-11-16',width=361.5;
+ const buttons=Array.from({length:7},(_,i)=>({
+   dataset:{date:addDays(monday,i)},setAttribute(name,value){this[name]=value;},
+   closest(){return {classList:{toggle(){}}};}
+ }));
+ const pager={scrollLeft:0,isConnected:true,querySelectorAll:()=>buttons,getBoundingClientRect:()=>({width})};
+ const picker={id:'week-date-picker',value:'',dataset:{},closest:()=>null};
+ const original=h.context.document.querySelector;
+ h.context.document.querySelector=s=>s==='.week-view-pager'?pager:s==='#week-date-picker'?picker:original(s);
+ h.state.date='2026-11-19';
+ const {align,swipe}=vm.runInContext('({align:alignWeekDate,swipe:followWeekSwipe})',h.context);
+ align(pager,false);assert.equal(pager.scrollLeft,3*width);
+ pager.scrollLeft=3.65*width;swipe({currentTarget:pager});assert.equal(h.state.date,'2026-11-19');
+ pager.scrollLeft=4*width;swipe({currentTarget:pager});assert.equal(h.state.date,'2026-11-20');
+ assert.equal(picker.value,h.state.date);assert.equal(buttons[4]['aria-pressed'],'true');assert.equal(h.context.renderCount,0);
+ const pick=value=>{picker.value=value;h.dispatch('change',{target:picker});};
+ pick('2026-11-18');assert.equal(pager.scrollLeft,2*width);assert.equal(h.context.renderCount,0);
+ for(const value of ['','2026-02-30','10000-01-07','9999-12-31']){
+   pick(value);assert.equal(h.state.date,'2026-11-18');assert.equal(picker.value,h.state.date);assert.equal(h.context.renderCount,0);
+ }
+ pick('2027-01-02');assert.equal(h.state.date,'2027-01-02');assert.equal(h.context.renderCount,1);
+ assert.equal(h.state.undo.length,0);assert.equal(h.state.dirty,false);
 });
 
 function dragTrackedBlock(h,id,fromDate,toDate,minute){

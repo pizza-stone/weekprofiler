@@ -24,7 +24,25 @@ function data(){
  };
 }
 function block(id,start,duration,category='g-learn'){return{id,title:'安排 '+id,start,duration,category,done:false};}
-function render(d,extra={}){return api.renderWeekly({data:d,date:'2026-11-09',groupFilter:'all',...extra},helpers);}
+function render(d,extra={}){return api.renderWeekly({data:d,date:'2026-11-09',viewMode:'plan',groupFilter:'all',...extra},helpers);}
+
+test('a live week opens in comparison mode with execution lane labels',()=>{
+ const html=api.renderWeekly({data:data(),date:'2026-11-09'},helpers);
+ assert.equal((html.match(/class="week-day-pair"/g)||[]).length,7);
+ assert.equal((html.match(/<span>计划<\/span><span>执行<\/span>/g)||[]).length,7);
+});
+
+test('dates can be selected in each live week mode and stay static in weekly templates',()=>{
+ const d=data(),date='2026-11-12';
+ for(const viewMode of ['plan','actual','compare']){
+   const html=render(d,{date,viewMode});
+   assert.equal((html.match(/data-action="week-select-date"/g)||[]).length,7);
+   assert.match(html,/data-action="week-select-date"[^>]*data-date="2026-11-12" aria-pressed="true"/);
+   assert.match(html,/data-action="week-select-date"[^>]*data-date="2026-11-15" aria-pressed="false"/);
+ }
+ d.weekTemplates=[{id:'w1',days:Array.from({length:7},()=>({blocks:[]}))}];
+ assert.doesNotMatch(render(d,{date,editingWeekId:'w1'}),/data-action="week-select-date"/);
+});
 
 test('weekly view has a fixed complete 04:00–next 04:00 grid even with no events',()=>{
  const html=render(data());

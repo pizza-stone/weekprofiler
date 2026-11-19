@@ -2,7 +2,7 @@ import test from 'node:test';
 import assert from 'node:assert/strict';
 import { createCloudSync, loadCloudSession } from '../web/cloud-sync.js';
 import { createChanges, applyChanges, rebaseChanges, isTimerChange } from '../lib/sync.mjs';
-import { seedData, validateData, migrateData } from '../lib/planner.mjs';
+import { seedData, validateData, migrateData, legacySeedData } from '../lib/planner.mjs';
 import { startTracking, pauseTracking } from '../lib/tracking.mjs';
 
 const copy = value => value === undefined ? undefined : structuredClone(value);
@@ -45,7 +45,7 @@ function harness(options = {}) {
 }
 
 function beforeLabels(withTimer = false) {
-  const data=seedData();delete data.tags;
+  const data=migrateData(legacySeedData());delete data.tags;delete data.tagDefaultsVersion;
   const strip=value=>{if(!value||typeof value!=='object')return;delete value.tagId;for(const child of Object.values(value))strip(child);};
   strip(data);
   if(withTimer){
@@ -65,7 +65,7 @@ test('online boot migrates legacy labels as guarded pending edits against the un
     return json({data:server,revision,timerRevision,ackMutationId:payload.mutationId});
   }});
   await h.controller.boot({userId:'alice'});
-  assert.deepEqual(h.state.baseData,original);assert.equal(h.state.data.tags.length,original.groups.length);
+  assert.deepEqual(h.state.baseData,original);assert.equal(h.state.data.tags.length,original.groups.length+1);
   assert.equal(h.state.data.tracking.timer.tagId,'work');assert.equal(h.state.dirty,true);
   await h.controller.save();assert.equal(sent.length,1);assert.ok(sent[0].changes.some(change=>change.path[0]==='tags'));
   assert.ok(sent[0].changes.some(isTimerChange));assert.equal(h.state.timerRevision,3);
@@ -110,7 +110,7 @@ test('migration of legacy timer labels cannot bypass a concurrent timer revision
 test('refresh and remote conflict resolution keep legacy label migrations dirty instead of acknowledging them locally',async()=>{
   const remote=beforeLabels(),h=harness({request:async()=>json({data:remote,revision:2,timerRevision:0})});
   await h.controller.refresh(true);
-  assert.equal(h.state.data.tags.length,remote.groups.length);assert.equal(h.state.baseData.tags,undefined);assert.equal(h.state.dirty,true);
+  assert.equal(h.state.data.tags.length,remote.groups.length+1);assert.equal(h.state.baseData.tags,undefined);assert.equal(h.state.dirty,true);
   h.state.conflict=true;h.state.syncConflict={remote:{data:remote,revision:2,timerRevision:0},paths:[['tasks']],changes:[]};
   assert.equal(await h.controller.resolve('remote'),true);
   assert.equal(h.state.conflict,false);assert.equal(h.state.dirty,true);assert.equal(h.state.baseData.tags,undefined);

@@ -8,7 +8,7 @@ import * as trackingModel from '../lib/tracking.mjs';
 const clone=value=>JSON.parse(JSON.stringify(value));
 const databaseKey='dayloom-portable-db',cacheKey='dayloom-v1-portable-preview';
 function legacyData(){
-  const data=planner.seedData();delete data.tags;
+  const data=planner.migrateData(planner.legacySeedData());delete data.tags;delete data.tagDefaultsVersion;
   const strip=value=>{if(!value||typeof value!=='object')return;delete value.tagId;Object.values(value).forEach(strip);};
   strip(data);data.groups.find(group=>group.id==='rest').countTowardsCompletion=false;
   return data;
@@ -46,7 +46,7 @@ test('legacy API boot persists same-version label migration to the portable data
   const storage=new Map(),original=legacyData();writeRow(storage,original,4);
   const h=harness(storage);await h.boot();
   assert.equal(h.state.ready,true,h.app.innerHTML);assert.equal(h.state.dirty,true);assert.ok(h.scheduled.size);
-  assert.equal(h.state.revision,4);assert.equal(h.state.data.tags.length,original.groups.length);
+  assert.equal(h.state.revision,4);assert.equal(h.state.data.tags.length,original.groups.length+1);
   assert.deepEqual(clone(h.state.data.groups),original.groups);
   assert.equal(JSON.parse(storage.get(databaseKey)).data.tags,undefined,'the pending migration is not assumed saved');
   assert.ok(JSON.parse(storage.get(cacheKey)).data.tasks.every(task=>task.tagId));

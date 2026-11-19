@@ -38,11 +38,11 @@ function daySelector(day,data,index,key,editing,esc) {
   return '<select class="week-template-select" '+attrs+' aria-label="'+WEEK_LABELS[index]+'使用的日模板">'+options+'</select>';
 }
 
-export function renderWeekly({data,date,editingWeekId=null,groupFilter='all',tagFilter='all',viewMode='plan',statsExpanded=false,expandedDays=[]},h) {
+export function renderWeekly({data,date,editingWeekId=null,groupFilter='all',tagFilter='all',viewMode='compare',statsExpanded=false,expandedDays=[]},h) {
   const {esc,btn,time,duration}=h;
   const startDate=mondayOf(date);
   const editing=data.weekTemplates.find(t=>t.id===editingWeekId);
-  const mode=editing||!['plan','actual','compare'].includes(viewMode)?'plan':viewMode;
+  const mode=editing?'plan':(['plan','actual','compare'].includes(viewMode)?viewMode:'compare');
   const days=Array.from({length:7},(_,index)=>{
     const key=addDays(startDate,index);
     const plan=editing?editing.days[index]:resolveDay(data,key);
@@ -64,10 +64,13 @@ export function renderWeekly({data,date,editingWeekId=null,groupFilter='all',tag
     const dayBusy=day.blocks.reduce((sum,block)=>sum+windowMinutes(block),0);
     const source={cycle:'周循环',saved:'已调整',empty:'留白',template:'周模板'}[day.source]||'已安排';
     const dateLabel=day.key.slice(5).replace('-','/');
+    const dayTitle=editing?'<strong>'+WEEK_LABELS[day.index]+'</strong><span>第 '+(day.index+1)+' 天</span>':
+      btn('week-select-date','<strong>'+WEEK_LABELS[day.index]+'</strong><span>'+dateLabel+'</span>','week-date-button',
+        'type="button" data-date="'+day.key+'" aria-pressed="'+(day.key===date)+'" aria-label="选择 '+day.key+' '+WEEK_LABELS[day.index]+'"');
     const detailKey=editing?'template:'+editing.id+':'+day.index:day.key,detailsExpanded=expandedDays.includes(detailKey);
     const detailToggle=btn('week-day-details','详情 <span aria-hidden="true">'+(detailsExpanded?'⌃':'⌄')+'</span>','week-day-details-toggle ghost','type="button" data-id="'+esc(detailKey)+'" aria-label="'+(detailsExpanded?'收起':'展开')+WEEK_LABELS[day.index]+'详情" aria-expanded="'+detailsExpanded+'" aria-controls="week-day-details-'+day.index+'"');
-    const detail=mode==='actual'?'<div class="week-actual-caption">实际记录</div>':daySelector(day,data,day.index,day.key,!!editing,esc)+'<div class="week-day-source"><span class="'+(day.source==='cycle'?'cycle-source':'')+'">'+source+'</span><span title="当日 04:00 到次日 04:00 的空闲时间">空闲 '+weekShortDuration(DAY_END-DAY_START-dayBusy)+'</span></div>'+dayFlow(day,data,esc,groupFilter,tagFilter,h.tagForItem);
-    return axisHead+'<section class="week-day-head'+(!editing&&day.key===date?' is-selected':'')+'" data-details-expanded="'+detailsExpanded+'"><div class="week-day-title"><strong>'+WEEK_LABELS[day.index]+'</strong><span>'+(!editing?dateLabel:'第 '+(day.index+1)+' 天')+'</span>'+detailToggle+'</div><div class="week-day-details" id="week-day-details-'+day.index+'">'+detail+(h.timeShares?.({blocks:day.blocks,date:day.key,viewMode:mode,template:!!editing,compact:true})||'')+'</div>'+(mode==='compare'?'<div class="week-column-labels"><span>计划</span><span>实际</span></div>':'')+'</section>';
+    const detail=mode==='actual'?'<div class="week-actual-caption">执行记录</div>':daySelector(day,data,day.index,day.key,!!editing,esc)+'<div class="week-day-source"><span class="'+(day.source==='cycle'?'cycle-source':'')+'">'+source+'</span><span title="当日 04:00 到次日 04:00 的空闲时间">空闲 '+weekShortDuration(DAY_END-DAY_START-dayBusy)+'</span></div>'+dayFlow(day,data,esc,groupFilter,tagFilter,h.tagForItem);
+    return axisHead+'<section class="week-day-head'+(!editing&&day.key===date?' is-selected':'')+'" data-details-expanded="'+detailsExpanded+'"><div class="week-day-title">'+dayTitle+detailToggle+'</div><div class="week-day-details" id="week-day-details-'+day.index+'">'+detail+(h.timeShares?.({blocks:day.blocks,date:day.key,viewMode:mode,template:!!editing,compact:true})||'')+'</div>'+(mode==='compare'?'<div class="week-column-labels"><span>计划</span><span>执行</span></div>':'')+'</section>';
   }).join('');
   const timeAxis='<div class="week-time-axis" aria-hidden="true">'+Array.from({length:slots},(_,index)=>'<div class="week-axis-slot'+((gridStart+index*30)%60===0?' hour':'')+(gridStart+index*30>=1440?' next-day':'')+'">'+((gridStart+index*30)%60===0?'<span>'+time(gridStart+index*30)+'</span>':'')+'</div>').join('')+'<div class="week-axis-end"><span>'+time(DAY_END)+'</span></div></div>';
   const columns=days.map(day=>{

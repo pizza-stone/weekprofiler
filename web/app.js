@@ -1,5 +1,5 @@
 import { seedData, validateData, migrateData, resolveDay, materializeDay, snapshotWeek, mondayOf, addDays, MAX_STATE_BYTES, MAX_TEMPLATE_NOTES, DAY_START, DAY_END, planningDate, tagForItem, effectiveTagId } from '/model.js';
-import {createTagSlot, assignTagSlot} from '/model.js';
+import {createTagSlot, assignTagSlot, installStarterTemplates} from '/model.js';
 import { createAIPlanner } from '/ai.js';
 import { renderWeekly, renderWeekTemplateCards } from '/week.js';
 import * as trackingModel from '/tracking-model.js';
@@ -27,7 +27,14 @@ const duration = n => n%60 ? (n>60?Math.floor(n/60)+' 小时 ':'')+n%60+' 分钟
 const dayKey = (date=new Date()) => planningDate(date,state.data?.timezone||'Asia/Shanghai');
 const dateObj = str => new Date(str+'T12:00:00');
 const addDate = (str,n) => { const d=dateObj(str); d.setDate(d.getDate()+n);return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0'); };
-let state={data:null,revision:0,userId:'',dirty:false,pending:null,busy:false,conflict:false,status:'正在连接',tab:'week',viewMode:'plan',date:'',templateId:null,weekTemplateId:null,templateKind:'day',weekFilter:'all',weekTagFilter:'all',editDate:null,editWeekday:null,filter:'all',tagFilter:'all',search:'',taskDurationMin:30,taskDurationMax:null,undo:[],ready:false};
+function readViewMode(key,fallback){
+ try{
+   const mode=localStorage.getItem(key);
+   if(['plan','actual','compare'].includes(mode))return mode;
+ }catch{}
+ return fallback;
+}
+let state={data:null,revision:0,userId:'',dirty:false,pending:null,busy:false,conflict:false,status:'正在连接',tab:'week',viewMode:readViewMode('weekprofiler-view-mode','plan'),weekViewMode:readViewMode('weekprofiler-week-view-mode','compare'),date:'',templateId:null,weekTemplateId:null,templateKind:'day',weekFilter:'all',weekTagFilter:'all',editDate:null,editWeekday:null,filter:'all',tagFilter:'all',search:'',taskDurationMin:30,taskDurationMax:null,undo:[],ready:false};
 let saveTimer,toastTimer,drag=null,storageFailed=false,changeGeneration=0,suppressClickUntil=0,notesUndoTarget=null;
 // Keep the original storage namespace so existing users retain their data.
 const fullStateUndo=new WeakSet();
@@ -112,7 +119,6 @@ async function boot(){
        isEditing:()=>!!($('#modal')?.open||drag||resize||document.activeElement?.id==='template-notes'||document.activeElement?.dataset?.templateRename==='true'||document.activeElement?.dataset?.durationBound),
        isVisible:()=>document.visibilityState!=='hidden'});
      await cloudSync.boot(identity);state.date=dayKey();state.ready=true;
-     try{const mode=localStorage.getItem('weekprofiler-view-mode');if(['plan','actual','compare'].includes(mode))state.viewMode=mode;}catch{}
      render();if(state.dirty)queueSave();
      setInterval(refresh,5000);setInterval(()=>{if(state.ready)getTrackingUI().tick();},1000);
      if('serviceWorker' in navigator)navigator.serviceWorker.register('/sw.js').catch(()=>{});
@@ -124,7 +130,7 @@ async function boot(){
    let remote;try{const r=await fetch('/api/planner',{cache:'no-store'});if(!r.ok)throw Error();remote=await r.json();}catch{if(!cached)throw Error('cloud');}
    if(cached?.dirty){Object.assign(state,{data:cached.data,revision:cached.revision,dirty:true,pending:cached.pending});}
    else{state.data=remote?.data||cached?.data||seedData();state.revision=remote?.revision??cached?.revision??0;state.dirty=!!remote&&!remote.data;}
-   const beforeMigration=JSON.stringify(state.data);state.data=migrateData(state.data);const upgraded=beforeMigration!==JSON.stringify(state.data);if(upgraded)state.dirty=true;state.date=dayKey();state.ready=true;state.status=remote?'已同步':'离线 · 已有内容可编辑';try{const mode=localStorage.getItem('weekprofiler-view-mode');if(['plan','actual','compare'].includes(mode))state.viewMode=mode;}catch{}cache();render();if(state.dirty)queueSave();
+   const beforeMigration=JSON.stringify(state.data);state.data=migrateData(state.data);const upgraded=beforeMigration!==JSON.stringify(state.data);if(upgraded)state.dirty=true;state.date=dayKey();state.ready=true;state.status=remote?'已同步':'离线 · 已有内容可编辑';cache();render();if(state.dirty)queueSave();
    setInterval(refresh,12000);setInterval(()=>{if(state.ready)getTrackingUI().tick();},1000);
  }catch(e){releaseCloudEditor?.();releaseCloudEditor=null;$('#app').innerHTML='<div class="boot-error panel"><div class="brand-mark" aria-hidden="true"></div><h1>周谱</h1><p>'+(isCloudBuild()?esc(e.message):e.message==='auth'?'登录后，电脑和手机就能使用同一份时间表。':'暂时无法读取云端日程。请检查网络后重试；未连接成功时不会覆盖已有数据。')+'</p><a href="'+(isCloudBuild()?'/api/auth/login':'/signin-with-chatgpt?return_to=/')+'" target="_top">'+(isCloudBuild()?'使用 Google 账号登录':'登录 ChatGPT')+'</a> '+btn('reload','重新尝试')+'</div>';}
 }
@@ -238,7 +244,7 @@ function timeline(){
   return '<div class="event '+(slot?'tag-slot':b.category)+(b.done?' done':'')+(b.duration>30?' long':'')+'" draggable="true" data-block="'+esc(b.id)+'"'+link+' data-action="edit-block" data-id="'+esc(b.id)+'" role="button" tabindex="0" aria-label="'+esc(label)+'" title="'+esc(label)+'" style="'+groupStyle(b)+';top:'+((b.start-DAY_START)/30*26+1)+'px;height:'+(b.duration/30*26-3)+'px">'+check+'<div class="event-main"><strong>'+esc(title)+'</strong>'+(b.duration>30?'<small>'+time(b.start)+' — '+time(b.start+b.duration)+'</small>':'')+'</div>'+action+'<div class="resize" data-resize="'+esc(b.id)+'" title="拖动调整时长"></div></div>';
  }).join('');
  const empty=!bs.length?'<div class="timeline-empty">'+icon('sun')+'<strong>这一天，留给你来安排</strong><span>从一个任务开始，或应用熟悉的日模板。</span><br>'+btn(state.templateId?'new-block':'apply',state.templateId?'添加第一项安排':'选择日模板','','data-minute="540"')+'</div>':'';
- content+='<div class="scroll-timeline"><div class="day-timeline-board'+(mode==='compare'?' is-comparison':'')+'"><div class="day-timeline-head'+(mode==='compare'?' is-comparison':'')+'">'+(mode!=='actual'?'<div class="day-lane-label">计划</div>':'')+(mode!=='plan'?'<div class="day-lane-label">实际</div>':'')+'</div><div class="day-timelines '+(mode==='compare'?'is-comparison':'')+'"'+(mode==='compare'?' data-plan-links':'')+'>';
+ content+='<div class="scroll-timeline"><div class="day-timeline-board'+(mode==='compare'?' is-comparison':'')+'"><div class="day-timeline-head'+(mode==='compare'?' is-comparison':'')+'">'+(mode!=='actual'?'<div class="day-lane-label">计划</div>':'')+(mode!=='plan'?'<div class="day-lane-label">执行</div>':'')+'</div><div class="day-timelines '+(mode==='compare'?'is-comparison':'')+'"'+(mode==='compare'?' data-plan-links':'')+'>';
  if(mode!=='actual')content+='<section class="day-lane"><div class="timeline">'+rows(true,true)+events+empty+'</div></section>';
  if(mode!=='plan')content+='<section class="day-lane"><div class="timeline actual-timeline" data-readonly="true">'+rows(mode==='actual',false)+getTrackingUI().renderActualEvents(state.date)+'</div></section>';
  return content+'</div></div></div><div class="timeline-footer"><span>04:00 至次日 04:00 · 30 分钟刻度</span>'+(state.data.cycle.enabled&&!state.templateId&&Object.hasOwn(state.data.days,state.date)?btn('restore-cycle','恢复周循环','ghost'):'')+btn('undo',icon('undo')+' 撤销','ghost',state.undo.length?'':'disabled')+'</div></div>';
@@ -309,12 +315,65 @@ function deleteTemplate(kind,id){
 }
 document.addEventListener('input',e=>{if(e.target.id==='template-notes')saveTemplateNotes(e.target);});
 document.addEventListener('focusout',e=>{if(e.target===notesUndoTarget)notesUndoTarget=null;if(e.target.id==='template-notes'&&state.conflict)setTimeout(()=>{if(state.conflict&&document.activeElement?.id!=='template-notes')render(true);},0);});
-function render(keep=false){
+const weekDateButtons='[data-action="week-select-date"]';
+function markWeekDate(pager,date){
+ const picker=$('#week-date-picker');
+ if(!picker)return;
+ state.date=date;picker.value=date;
+ for(const button of pager.querySelectorAll(weekDateButtons)){
+   const selected=button.dataset.date===date;
+   button.setAttribute('aria-pressed',String(selected));
+   button.closest('.week-day-head').classList.toggle('is-selected',selected);
+ }
+}
+function alignWeekDate(pager,revealDesktop){
+ const buttons=Array.from(pager.querySelectorAll(weekDateButtons));
+ const index=buttons.findIndex(button=>button.dataset.date===state.date);
+ if(index<0)return;
+ const width=pager.getBoundingClientRect().width;
+ if(width){
+   pager.scrollLeft=index*width;
+ }else if(revealDesktop){
+   const timeline=pager.querySelector('.week-view-scroll'),bounds=timeline.getBoundingClientRect();
+   const day=buttons[index].closest('.week-day-head').getBoundingClientRect();
+   const left=bounds.left+timeline.querySelector('.week-axis-head').getBoundingClientRect().width;
+   if(day.left<left)timeline.scrollLeft+=day.left-left;
+   else if(day.right>bounds.right)timeline.scrollLeft+=day.right-bounds.right;
+ }
+}
+function followWeekSwipe(event){
+ const pager=event.currentTarget,width=pager.getBoundingClientRect().width;
+ if(!width||!pager.isConnected)return;
+ const index=Math.round(pager.scrollLeft/width);
+ // Only update once a day reaches its snap stop. Vertical scrolling never moves the pager.
+ if(Math.abs(pager.scrollLeft-index*width)>1)return;
+ const date=pager.querySelectorAll(weekDateButtons)[index]?.dataset.date;
+ if(date&&date!==state.date)markWeekDate(pager,date);
+}
+function selectWeekDate(date){
+ const picker=$('#week-date-picker');
+ // A displayed week needs seven representable dates, including at year boundaries.
+ if(!/^\d{4}-\d{2}-\d{2}$/.test(date)||date<'0001-01-01'||date>'9999-12-26'){
+   if(picker)picker.value=state.date;
+   return;
+ }
+ let monday;
+ try{monday=mondayOf(date);}catch{if(picker)picker.value=state.date;return;}
+ const pager=$('.week-view-pager');
+ if(pager&&monday===mondayOf(state.date)){
+   markWeekDate(pager,date);alignWeekDate(pager,true);
+ }else{
+   state.date=date;render(true,true);
+ }
+}
+function render(keep=false,revealWeekDate=false){
  notesUndoTarget=null;
  if(state.weekTemplateId&&!state.data.weekTemplates.some(w=>w.id===state.weekTemplateId)){state.weekTemplateId=null;state.editWeekday=null;state.editDate=null;state.tab='templates';state.templateKind='week';}
  const scroll=$('.scroll-timeline')?.scrollTop;
  const weekTimeline=$('.week-view-scroll'),weekTop=weekTimeline?.scrollTop,weekLeft=weekTimeline?.scrollLeft;
  const weekPageLeft=$('.week-view-pager')?.scrollLeft;
+ const previousWeek=$('.week-page')?.dataset.weekContext;
+ const previousDay=$('.week-day-head.is-selected .week-date-button')?.dataset.date;
  const nav=Object.entries({week:['calendar','一周'],day:['agenda','日程'],templates:['layers','模板'],tasks:['list','任务']}).map(([id,v])=>btn('tab',icon(v[0])+v[1],state.tab===id?'active':'','data-id="'+id+'"')).join('');
  let main='';
  if(state.weekTemplateId||state.tab==='week')main=renderWeekPage();
@@ -324,10 +383,14 @@ function render(keep=false){
  else main='<div class="intro tasks-intro"><div><p class="eyebrow">ONE THING AT A TIME</p><h1><span class="desktop-intro-title">先记下来，再慢慢安排。</span><span class="mobile-intro-title">任务</span></h1><p>一次性的待办，或想经常做的事，都放在这里。</p></div><div class="intro-actions">'+btn('new-task',icon('plus')+'新建任务','primary')+'</div></div><div class="all-tasks"><div class="group-toolbar">'+btn('groups','管理分组')+btn('tags','管理标签')+'</div>'+filters()+tagFilters()+'<div class="task-list">'+filteredTasks().map(taskCard).join('')+'</div>'+(state.data.tasks.length?'':'<div class="empty-state">还没有任务。添加一件想做的事吧。</div>')+'</div>';
  $('#app').innerHTML='<header class="header"><div class="brand"><div class="brand-mark" aria-hidden="true"></div><div><strong>周谱</strong><small>weekprofiler</small></div></div><nav class="tabs" aria-label="主导航">'+nav+'</nav><div class="header-actions">'+btn('ai','✦ AI','ai-launch','aria-label="AI 整理日程"')+btn('sync','','sync ghost')+btn('export',icon('download'),'icon desktop-export','aria-label="导出与备份"')+btn('settings',icon('settings'),'icon ghost','aria-label="设置"')+'</div></header><main class="shell'+(state.tab==='tasks'&&!state.templateId&&!state.weekTemplateId?' tasks-shell':'')+'">'+(state.conflict?'<div class="notice"><span>另一台设备更新了日程。本机修改已保留，暂未覆盖云端。可先导出本机备份，再载入云端版本。</span><div>'+btn('backup','导出本机备份')+' '+btn('resolve-conflict','载入云端版本')+'</div></div>':'')+getTrackingUI().bar()+main+'</main><nav class="bottom-nav" aria-label="手机导航">'+nav+'</nav>';
  refreshPlanLinks();updateStatus();
- if(keep&&weekTimeline){
-   const timeline=$('.week-view-scroll'),pager=$('.week-view-pager');
-   if(timeline){timeline.scrollTop=weekTop;timeline.scrollLeft=weekLeft;}
-   if(pager)pager.scrollLeft=weekPageLeft||0;
+ const pager=$('.week-view-pager');
+ if(pager){
+   const timeline=$('.week-view-scroll');
+   if(keep&&weekTimeline)timeline.scrollTop=weekTop;
+   if(keep&&previousWeek===$('.week-page').dataset.weekContext&&(state.weekTemplateId||previousDay===state.date)&&!revealWeekDate){
+     timeline.scrollLeft=weekLeft;pager.scrollLeft=weekPageLeft;
+   }else if(!state.weekTemplateId)alignWeekDate(pager,revealWeekDate);
+   if(!state.weekTemplateId)pager.addEventListener('scroll',followWeekSwipe,{passive:true});
  }
  if($('.scroll-timeline'))$('.scroll-timeline').scrollTop=keep&&scroll!==undefined?scroll:Math.max(0,((blocks().length?Math.min(...blocks().map(b=>b.start)):480)-DAY_START-60)/30*26);
 }
@@ -419,7 +482,34 @@ function saveBlockForm(form,values){
    if(index>=0)list[index]=block;else list.push(block);
  },'安排已保存'))close();
 }
-function templateForm(mode,id){const t=state.data.templates.find(t=>t.id===id);modal(mode==='rename'?'修改模板简介':mode==='save'?'把这一天存为模板':'新建日模板','<form id="template-form" data-mode="'+mode+'" data-id="'+(id||'')+'">'+(mode==='rename'?'':'<label for="name">模板名称</label><input id="name" name="name" required maxlength="60" value="'+esc(t?.name||'')+'" placeholder="例如：周末充电日">')+'<label for="description">一句描述（可选）</label><input id="description" name="description" maxlength="200" value="'+esc(t?.description||'')+'" placeholder="这个日子，想以什么节奏度过？"><div class="modal-actions"><button class="primary" type="submit">'+(mode==='rename'?'保存简介':'保存模板')+'</button></div></form>');}
+function starterTemplateOption(kind){
+ return '<div class="callout"><p>将「创作日」「创作周」和配套任务加入模板库与任务池。选好日期后，可自行应用模板。</p>'+
+   btn('add-starter-templates','添加示例模板','','type="button" data-kind="'+kind+'"')+
+   '<div id="starter-template-error" class="error" role="alert"></div></div>';
+}
+function templateCopy(original){
+ const copy=clone(original);
+ delete copy.starterExample;
+ copy.id=uid();copy.name=original.name.slice(0,54)+' · 副本';
+ return copy;
+}
+function openStarterTemplate(kind){
+ const draft=clone(state.data);
+ let result;
+ try{
+   result=installStarterTemplates(draft);
+   if(result.changed&&!commit(()=>{state.data=draft;},'已添加示例模板',{repaint:false}))throw new Error('内容已超出容量，未能添加示例模板。');
+ }catch(error){
+   $('#starter-template-error').textContent=error.message;
+   return;
+ }
+ close();
+ state.tab='templates';state.templateKind=kind;
+ state.templateId=kind==='day'?result.dayTemplateId:null;
+ state.weekTemplateId=kind==='week'?result.weekTemplateId:null;
+ render();
+}
+function templateForm(mode,id){const t=state.data.templates.find(t=>t.id===id);modal(mode==='rename'?'修改模板简介':mode==='save'?'把这一天存为模板':'新建日模板','<form id="template-form" data-mode="'+mode+'" data-id="'+(id||'')+'">'+(mode==='rename'?'':'<label for="name">模板名称</label><input id="name" name="name" required maxlength="60" value="'+esc(t?.name||'')+'" placeholder="例如：周末充电日">')+'<label for="description">一句描述（可选）</label><input id="description" name="description" maxlength="200" value="'+esc(t?.description||'')+'" placeholder="这个日子，想以什么节奏度过？"><div class="modal-actions"><button class="primary" type="submit">'+(mode==='rename'?'保存简介':'保存模板')+'</button></div></form>'+(mode==='new'?starterTemplateOption('day'):''));}
 function applyForm(id){if(!state.data.templates.length){toast('先创建一个日模板');return;}modal('把熟悉的安排，放进一天','<form id="apply-form"><label for="template">选择模板</label><select id="template" name="template">'+options(Object.fromEntries(state.data.templates.map(t=>[t.id,t.name])),id||state.data.templates[0].id)+'</select><div class="form-row"><div><label for="date">应用到日期</label><input id="date" name="date" type="date" required value="'+state.date+'"></div><div><label for="apply-mode">已有日程</label><select id="apply-mode" name="mode"><option value="merge">保留，跳过冲突</option><option value="replace">替换整天（可撤销）</option></select></div></div><p>应用后生成独立日程。之后编辑模板，不会改变这一天。已完成的一次性任务会跳过。</p><div class="callout" id="apply-preview"></div><div class="error" id="form-error"></div><div class="modal-actions"><button type="submit" class="primary">应用到这一天</button></div></form>');previewApply();}
 function proposedApply(form){const f=new FormData(form),t=state.data.templates.find(t=>t.id===f.get('template')),date=String(f.get('date')),replace=f.get('mode')==='replace';const out=replace?[]:clone(resolveDay(state.data,date).blocks);let skipped=0,added=0;for(const b of t?.blocks||[]){const task=state.data.tasks.find(t=>t.id===b.taskId);if((task?.done&&!task.reusable)||collision(out,b.start,b.duration)){skipped++;continue;}out.push({...b,id:uid(),done:false});added++;}return {out,date,skipped,added};}
 function previewApply(){const f=$('#apply-form');if(!f)return;const p=proposedApply(f);$('#apply-preview').textContent='将添加 '+p.added+' 项安排'+(p.skipped?'，跳过 '+p.skipped+' 项冲突或已完成的待办':'')+'。';}
@@ -442,17 +532,17 @@ function calendarExport(all=false){
  if(!count){toast('还没有可导出的日程');return;}lines.push('END:VCALENDAR');const folded=lines.map(line=>{let out='',chunk='',size=0;for(const ch of line){const n=new TextEncoder().encode(ch).length;if(size+n>74){out+=chunk+'\r\n ';chunk='';size=1;}chunk+=ch;size+=n;}return out+chunk;}).join('\r\n')+'\r\n';
  download('weekprofiler-'+(all==='week'?'week-'+mondayOf(state.date):all==='four'?'4weeks-'+mondayOf(state.date):all?'saved-days':state.date)+'.ics',folded,'text/calendar;charset=utf-8');toast('已导出 '+count+' 项日程，需在日历中手动导入');close();
 }
-function exportModal(){modal('带走你的安排',btn('windows-calendar','<strong>Windows / Outlook 日历（可选）</strong><small>导出周循环，查看导入步骤</small>','export-option')+btn('ics-week','<strong>导出当前周</strong><small>包含周循环与单日例外</small>','export-option')+btn('ics-4weeks','<strong>导出从本周起 4 周</strong><small>把循环展开为具体日期，兼容日历导入</small>','export-option')+'<p>日历文件用于手动导入。再次修改网页日程后，需要重新导出；它不会自动更新手机日历。</p>'+btn('ics-day','<strong>导出选中日期 · '+state.date+'</strong><small>标准 .ics 日历文件</small>','export-option')+btn('ics-all','<strong>导出所有手动保存的日期</strong><small>循环日期请使用上方按周导出</small>','export-option')+btn('backup','<strong>完整数据备份</strong><small>保存任务、模板、每日安排、实际记录和计时状态 · JSON</small>','export-option')+'<div class="callout" style="margin-top:16px">华为 4.3 是否能直接打开日历文件，需要在手机上验证。自动同步可以后续连接日历账户，当前尚未接入。</div>');}
+function exportModal(){modal('带走你的安排',btn('windows-calendar','<strong>Windows / Outlook 日历（可选）</strong><small>导出周循环，查看导入步骤</small>','export-option')+btn('ics-week','<strong>导出当前周</strong><small>包含周循环与单日例外</small>','export-option')+btn('ics-4weeks','<strong>导出从本周起 4 周</strong><small>把循环展开为具体日期，兼容日历导入</small>','export-option')+'<p>日历文件用于手动导入。再次修改网页日程后，需要重新导出；它不会自动更新手机日历。</p>'+btn('ics-day','<strong>导出选中日期 · '+state.date+'</strong><small>标准 .ics 日历文件</small>','export-option')+btn('ics-all','<strong>导出所有手动保存的日期</strong><small>循环日期请使用上方按周导出</small>','export-option')+btn('backup','<strong>完整数据备份</strong><small>保存任务、模板、每日安排、执行记录和计时状态 · JSON</small>','export-option')+'<div class="callout" style="margin-top:16px">华为 4.3 是否能直接打开日历文件，需要在手机上验证。自动同步可以后续连接日历账户，当前尚未接入。</div>');}
 function syncSettings(){
  if(!cloudSync)return '<div class="settings-row"><strong>电脑与手机同步</strong><p>在两端用同一个 ChatGPT 账户打开本网站。打开页面时同步，并每 12 秒检查更新。</p><p>当前：'+esc(state.status)+'</p></div>';
  return '<div class="settings-row"><strong>个人云同步</strong><p>'+esc(state.email)+'</p><p>当前：'+esc(state.status)+(state.lastSyncedAt?' · 最近同步 '+esc(new Date(state.lastSyncedAt).toLocaleTimeString('zh-CN')):'')+'</p><p>两端打开同一网址。前台每 5 秒检查更新，离线修改会在重新联网并打开页面后补传。</p>'+btn('sync','立即同步')+' <a href="/api/auth/login" target="_top">重新登录 Google 账号</a> '+btn('sign-out','退出登录')+(state.conflict?' '+btn('resolve-conflict','处理冲突'):'')+(state.conflictDraft?' '+btn('conflict-backup','导出上次冲突草稿'):'')+'</div>';
 }
 function settings(){modal('让周谱适合你',btn('ai','✦ AI 对话整理日程','export-option')+btn('groups','自定义任务分组','export-option')+btn('cycle-settings','设置每周循环','export-option')+syncSettings()+'<div class="settings-row"><strong>日程时区</strong><p>导出的手机日历使用这个时区，模板仍按当地钟点安排。</p><select id="timezone" aria-label="日程时区">'+options({'Asia/Shanghai':'北京时间 · UTC+8','Asia/Singapore':'新加坡 · UTC+8','America/Los_Angeles':'洛杉矶 · 夏令时自动调整','UTC':'协调世界时 · UTC'},state.data.timezone)+'</select></div><div class="settings-row"><strong>添加到手机桌面</strong><p>华为浏览器打开此网址，在菜单中选择「添加至 → 桌面」。首次加载需要网络；已打开的页面支持断网编辑，恢复联网后补同步。</p></div>'+btn('export','日历导出与备份','export-option')+'<label class="export-option" for="import-file">从 JSON 备份恢复<input type="file" id="import-file" accept=".json,application/json" style="margin-top:10px"></label><p>恢复会替换当前数据，先预览确认，并可撤销。</p>');}
 function cloudConflictModal(){
- const conflict=state.syncConflict||{},labels={tasks:'任务',templates:'日模板',weekTemplates:'周模板',days:'日程',tracking:'实际记录与计时',cycle:'周循环',groups:'分组',timezone:'时区'};
+ const conflict=state.syncConflict||{},labels={tasks:'任务',templates:'日模板',weekTemplates:'周模板',days:'日程',tracking:'执行记录与计时',cycle:'周循环',groups:'分组',timezone:'时区'};
  const paths=conflict.paths||[],details=paths.slice(0,8).map(path=>{const parts=Array.isArray(path)?path:[String(path)];return '<li>'+esc(parts.map((part,index)=>typeof part==='object'?part.id:(index===0?labels[part]||part:part)).join(' / '))+'</li>';}).join('');
  const canKeep=!!state.baseData&&!state.replaceRequested&&!conflict.changes?.some(change=>change.path[0]==='tracking');
- modal('核对两端修改','<p>'+esc(conflict.error||'电脑和手机修改了同一内容。')+'</p>'+(details?'<ul class="sync-conflicts">'+details+'</ul>':'')+'<p>独立修改会自动合并。计时和重叠的实际记录需要核对；可导出本机备份，载入云端后补录。采用云端时也会在本机保留一份冲突草稿。</p><div class="modal-actions">'+btn('backup','导出本机备份')+(canKeep?btn('keep-local-conflict','保留本机这些改动'):'')+btn('confirm-cloud','采用云端','primary')+'</div>');
+ modal('核对两端修改','<p>'+esc(conflict.error||'电脑和手机修改了同一内容。')+'</p>'+(details?'<ul class="sync-conflicts">'+details+'</ul>':'')+'<p>独立修改会自动合并。计时和重叠的执行记录需要核对；可导出本机备份，载入云端后补录。采用云端时也会在本机保留一份冲突草稿。</p><div class="modal-actions">'+btn('backup','导出本机备份')+(canKeep?btn('keep-local-conflict','保留本机这些改动'):'')+btn('confirm-cloud','采用云端','primary')+'</div>');
 }
 let restoreData=null;
 document.addEventListener('click',async e=>{
@@ -462,7 +552,7 @@ document.addEventListener('click',async e=>{
  if(getTrackingUI().action(a,id,el))return;
  if(handleV2Action(a,id,el))return;
  if(a==='close')close();
- else if(a==='tab'){state.tab=id;state.templateId=null;state.weekTemplateId=null;state.editDate=null;state.editWeekday=null;state.filter='all';state.tagFilter='all';state.search='';render();}
+ else if(a==='tab'){if(id==='week'&&window.matchMedia?.('(max-width:720px)').matches)state.date=dayKey();state.tab=id;state.templateId=null;state.weekTemplateId=null;state.editDate=null;state.editWeekday=null;state.filter='all';state.tagFilter='all';state.search='';render();}
  else if(a==='filter'){state.filter=id;if(isTemplateEditing())updateTaskSources();else render(true);}
  else if(a==='task-tag-filter'||a==='template-task-tag'){if(state.weekTemplateId)state.weekTagFilter=id;else state.tagFilter=id;if(isTemplateEditing())updateTaskSources();else render(true);}
  else if(a==='template-task-group'){if(state.weekTemplateId)state.weekFilter=id;else state.filter=id;updateTaskSources();}
@@ -483,10 +573,11 @@ document.addEventListener('click',async e=>{
  else if(a==='prev'||a==='next'){state.date=addDate(state.date,a==='prev'?-7:7);render();}
  else if(a==='scroll')$('.scroll-timeline')?.scrollTo({top:(Number(el.dataset.minute)-DAY_START)/30*26-10,behavior:'smooth'});
  else if(a==='new-template')templateForm('new');
+ else if(a==='add-starter-templates')openStarterTemplate(el.dataset.kind);
  else if(a==='save-template')templateForm('save');
  else if(a==='edit-template-title')beginTemplateRename(el);
  else if(a==='rename-template')templateForm('rename',id||state.templateId);
- else if(a==='copy-template'){commit(d=>{const t=d.templates.find(t=>t.id===id);d.templates.push({...clone(t),id:uid(),name:t.name.slice(0,54)+' · 副本',blocks:t.blocks.map(b=>({...b,id:uid(),done:false}))});},'模板已复制');}
+ else if(a==='copy-template'){commit(d=>{const t=templateCopy(d.templates.find(t=>t.id===id));t.blocks=freshBlocks(t.blocks);d.templates.push(t);},'模板已复制');}
  else if(a==='edit-template'){state.templateId=id;state.weekTemplateId=null;state.tab='templates';render();}
  else if(a==='back'){state.templateId=null;render();}
  else if(a==='apply')applyForm(id);
@@ -555,6 +646,7 @@ document.addEventListener('change',async e=>{
  if(e.target.closest('#week-apply-form'))previewWeekApply();
  if(['assign-day-template','assign-week-template-day'].includes(e.target.dataset.action))assignDayForm(e.target);
  if(e.target.id==='date-picker'&&e.target.value){state.date=e.target.value;render();}
+ if(e.target.id==='week-date-picker')selectWeekDate(e.target.value);
  if(e.target.id==='timezone'){commit(d=>d.timezone=e.target.value,'时区已保存');}
  if(e.target.id==='import-file'){try{const file=e.target.files[0];if(!file)return;if(file.size>MAX_STATE_BYTES*4)throw Error();const raw=JSON.parse(await file.text());if(!validateData(raw.data))throw Error();restoreData=migrateData(raw.data);modal('恢复备份预览','<p>此备份包含 '+raw.data.tasks.length+' 个任务、'+raw.data.templates.length+' 个模板和 '+Object.keys(raw.data.days).length+' 天日程。</p><div class="callout">确认后会替换当前全部内容，支持撤销。建议先导出当前备份。</div><div class="modal-actions">'+btn('backup','导出当前备份')+btn('confirm-import','确认恢复','primary')+'</div>');}catch{toast('备份格式不正确或文件过大，未修改数据');}}
 });
@@ -668,14 +760,19 @@ function daySnapshot(id){const t=state.data.templates.find(t=>t.id===id);return 
 function allBlockLists(data){return [...data.templates.map(t=>t.blocks),...Object.values(data.days),...data.weekTemplates.flatMap(w=>w.days.map(d=>d.blocks)),...data.cycle.days.map(d=>d.blocks)];}
 function renderWeekPage(){
  const editing=state.data.weekTemplates.find(t=>t.id===state.weekTemplateId),monday=mondayOf(state.date);
+ const dateNavigation=editing?'<span class="template-tag">编辑周模板 · 不改已有日期</span>':
+   btn('prev-week',icon('left'),'icon','aria-label="上一周"'+(monday==='0001-01-01'?' disabled':''))+
+   btn('week-today','本周','','title="回到今天"')+
+   btn('next-week',icon('right'),'icon','aria-label="下一周"'+(monday==='9999-12-20'?' disabled':''))+
+   '<input type="date" id="week-date-picker" aria-label="选择周视图日期" min="0001-01-01" max="9999-12-26" value="'+state.date+'">';
  let title=editing?esc(editing.name):monday.slice(5).replace('-','月')+'日 — '+addDays(monday,6).slice(5).replace('-','月')+'日';
  let intro='<div class="intro week-intro"><div><p class="eyebrow">'+(editing?'WEEK TEMPLATE / 周模板':'YOUR WEEK, AT A GLANCE / 一周的节奏')+'</p>'+(editing?templateTitle('week',editing,1):'<h1>'+title+'</h1>')+'<p>'+(editing?'选择每天的日模板，也可以直接编辑时间块。每次修改自动保存。':'看见时间的去向，也给生活留一些空白。')+'</p></div><div class="intro-actions">'+(editing?btn('delete-week-template','删除模板','danger','data-id="'+editing.id+'"')+btn('week-template-meta','简介','','data-id="'+esc(editing.id)+'"')+btn('finish-week-edit','完成编辑','primary'):btn('save-week-template',icon('copy')+'存为周模板')+btn('apply-week-template',icon('layers')+'应用周模板','primary'))+'</div></div>';
- intro+='<div class="week-control"><div class="date-controls">'+(editing?'<span class="template-tag">编辑周模板 · 不改已有日期</span>':btn('prev-week',icon('left'),'icon','aria-label="上一周"')+btn('week-today','本周')+btn('next-week',icon('right'),'icon','aria-label="下一周"'))+btn('undo',icon('undo')+' 撤销','ghost',state.undo.length?'':'disabled')+'</div><div class="cycle-summary"><span class="'+(state.data.cycle.enabled?'cycle-on':'')+'">'+(state.data.cycle.enabled?'● 每周循环已开启':'○ 每周循环未开启')+'</span>'+btn('cycle-settings','设置周循环','ghost')+'</div></div>';
- return '<div class="week-page">'+intro+(editing?templateNotesPanel('week',editing):getTrackingUI().summary(true))+renderWeekly({data:state.data,date:state.date,editingWeekId:state.weekTemplateId,groupFilter:state.weekFilter,tagFilter:state.weekTagFilter,viewMode:state.viewMode,statsExpanded:!!state.weekStatsExpanded,expandedDays:state.weekDetailDays||[]},viewHelpers)+'</div>';
+ intro+='<div class="week-control"><div class="date-controls">'+dateNavigation+btn('undo',icon('undo')+' 撤销','ghost',state.undo.length?'':'disabled')+'</div><div class="cycle-summary"><span class="'+(state.data.cycle.enabled?'cycle-on':'')+'">'+(state.data.cycle.enabled?'● 每周循环已开启':'○ 每周循环未开启')+'</span>'+btn('cycle-settings','设置周循环','ghost')+'</div></div>';
+ return '<div class="week-page" data-week-context="'+(editing?'template:'+esc(editing.id):monday)+'">'+intro+(editing?templateNotesPanel('week',editing):getTrackingUI().summary(true))+renderWeekly({data:state.data,date:state.date,editingWeekId:state.weekTemplateId,groupFilter:state.weekFilter,tagFilter:state.weekTagFilter,viewMode:state.weekViewMode,statsExpanded:!!state.weekStatsExpanded,expandedDays:state.weekDetailDays||[]},viewHelpers)+'</div>';
 }
 function groupsModal(){modal('我的项目分组','<p>分组用于具体项目，例如求职、月任务。同一分组内的任务可以使用不同标签，颜色由标签决定。</p><div class="group-list">'+state.data.groups.map(g=>'<div class="group-row"><span>'+esc(g.name)+(g.countTowardsCompletion===false?'<small class="group-completion-note">不计入完成度</small>':'')+'</span>'+btn('edit-group','编辑','ghost','data-id="'+g.id+'"')+btn('delete-group','删除','ghost','data-id="'+g.id+'" '+(state.data.groups.length===1?'disabled':''))+'</div>').join('')+'</div><div class="modal-actions">'+btn('tags','管理标签')+btn('new-group','＋ 新建分组','primary')+'</div>');}
 function groupForm(id){const g=state.data.groups.find(g=>g.id===id)||{name:''};modal(id?'编辑项目分组':'新建项目分组','<form id="group-form" data-id="'+(id||'')+'"><label for="group-name">分组名称</label><input id="group-name" name="name" maxlength="30" required value="'+esc(g.name)+'" placeholder="例如：求职、月任务、个人项目"><label class="check-label"><input type="checkbox" name="countTowardsCompletion" '+(g.countTowardsCompletion!==false?'checked':'')+'>计入任务完成率</label><p class="group-completion-help">取消后，整个项目不计入完成率。标签也可单独设置不计入；所有用时仍正常统计。</p><div class="error" id="form-error"></div><div class="modal-actions"><button class="primary">保存分组</button></div></form>');}
-function deleteGroupForm(id){if(state.data.groups.length<2)return;const g=groupFor(id);modal('删除项目分组','<form id="delete-group-form" data-id="'+id+'"><p>「'+esc(g.name)+'」里的任务、模板、日程和实际记录会转入所选项目，标签和颜色保持不变。</p><label for="group-target">转入分组</label><select id="group-target" name="target">'+options(Object.fromEntries(state.data.groups.filter(g=>g.id!==id).map(g=>[g.id,g.name])))+'</select><div class="modal-actions"><button class="primary">转移并删除分组</button></div></form>');}
+function deleteGroupForm(id){if(state.data.groups.length<2)return;const g=groupFor(id);modal('删除项目分组','<form id="delete-group-form" data-id="'+id+'"><p>「'+esc(g.name)+'」里的任务、模板、日程和执行记录会转入所选项目，标签和颜色保持不变。</p><label for="group-target">转入分组</label><select id="group-target" name="target">'+options(Object.fromEntries(state.data.groups.filter(g=>g.id!==id).map(g=>[g.id,g.name])))+'</select><div class="modal-actions"><button class="primary">转移并删除分组</button></div></form>');}
 function tagsModal(){modal('我的任务标签','<p>标签表示工作、学习、生活、休息等类别，决定时间块的颜色。标签和项目分组可以自由组合。</p><div class="group-list">'+tagList().map(tag=>'<div class="group-row"><i style="background:'+tag.color+'"></i><span>'+esc(tag.name)+(tag.countTowardsCompletion===false?'<small class="group-completion-note">不计入完成度</small>':'')+'</span>'+btn('edit-tag','编辑','ghost','data-id="'+esc(tag.id)+'"')+btn('delete-tag','删除','ghost','data-id="'+esc(tag.id)+'" '+(tagList().length===1?'disabled':''))+'</div>').join('')+'</div><div class="modal-actions">'+btn('groups','管理分组')+btn('new-tag','＋ 新建标签','primary')+'</div>');}
 const TAG_COLOR_PALETTE=[
  {name:'苔绿',color:'#6f987e'},{name:'湖青',color:'#5e9b9b'},{name:'雾蓝',color:'#718db5'},{name:'鸢尾',color:'#9992c0'},{name:'浅紫',color:'#ad8db6'},
@@ -686,9 +783,9 @@ function tagColorPalette(color){return '<div class="tag-palette" role="group" ar
 function syncTagColorSelection(color){const value=String(color).toLowerCase();document.querySelectorAll('#tag-form [data-tag-color]').forEach(button=>button.setAttribute('aria-pressed',String(button.dataset.tagColor===value)));const output=$('#tag-color-value');if(output)output.textContent=tagColorCaption(value);}
 function selectTagColor(color){if(!TAG_COLOR_PALETTE.some(item=>item.color===color))return;const input=$('#tag-color');if(input){input.value=color;syncTagColorSelection(color);}}
 function tagForm(id){const tag=tagList().find(tag=>tag.id===id)||{name:'',color:TAG_COLOR_PALETTE[0].color};modal(id?'编辑标签':'新建标签','<form id="tag-form" data-id="'+esc(id||'')+'"><label for="tag-name">标签名称</label><input id="tag-name" name="name" maxlength="30" required value="'+esc(tag.name)+'" placeholder="例如：工作、学习、生活、休息"><label id="tag-palette-label">时间块颜色</label>'+tagColorPalette(tag.color)+'<div class="tag-custom-color"><label for="tag-color">自定义颜色</label><input id="tag-color" name="color" type="color" value="'+esc(tag.color)+'"><output id="tag-color-value" for="tag-color" aria-live="polite">'+tagColorCaption(tag.color)+'</output></div><label class="check-label"><input type="checkbox" name="countTowardsCompletion" '+(tag.countTowardsCompletion!==false?'checked':'')+'>计入任务完成率</label><p class="group-completion-help">取消后，此标签的任务不计入完成率，适合生活、休息等安排；用时与耗时占比仍保留。</p><div class="error" id="form-error"></div><div class="modal-actions"><button class="primary">保存标签</button></div></form>');}
-function deleteTagForm(id){if(tagList().length<2)return;const tag=tagList().find(tag=>tag.id===id);if(!tag)return;modal('删除标签','<form id="delete-tag-form" data-id="'+esc(id)+'"><p>把「'+esc(tag.name)+'」在任务、模板、日程和实际记录中的使用转为另一个标签，项目分组不变。可以撤销。</p><label for="tag-target">替换为标签</label><select id="tag-target" name="target">'+options(Object.fromEntries(tagList().filter(tag=>tag.id!==id).map(tag=>[tag.id,tag.name])))+'</select><div class="modal-actions"><button class="primary">替换并删除标签</button></div></form>');}
+function deleteTagForm(id){if(tagList().length<2)return;const tag=tagList().find(tag=>tag.id===id);if(!tag)return;modal('删除标签','<form id="delete-tag-form" data-id="'+esc(id)+'"><p>把「'+esc(tag.name)+'」在任务、模板、日程和执行记录中的使用转为另一个标签，项目分组不变。可以撤销。</p><label for="tag-target">替换为标签</label><select id="tag-target" name="target">'+options(Object.fromEntries(tagList().filter(tag=>tag.id!==id).map(tag=>[tag.id,tag.name])))+'</select><div class="modal-actions"><button class="primary">替换并删除标签</button></div></form>');}
 function allTaxonomyItems(data){return [...data.tasks,...allBlockLists(data).flat(),...(data.tracking?.sessions||[]),...(data.tracking?.timer?[data.tracking.timer]:[])];}
-function weekTemplateForm(mode,id){const t=state.data.weekTemplates.find(w=>w.id===(id||state.weekTemplateId));modal(mode==='meta'?'修改周模板简介':'保存一份周模板','<form id="week-template-form" data-mode="'+mode+'" data-id="'+(t?.id||'')+'">'+(mode==='meta'?'':'<label for="week-template-name">周模板名称</label><input id="week-template-name" name="name" maxlength="60" required placeholder="例如：工作学习平衡周">')+'<label for="week-template-description">描述（可选）</label><input id="week-template-description" name="description" maxlength="200" value="'+esc(mode==='meta'?t.description:'')+'">'+(mode==='meta'?'':'<p>'+(mode==='save'?'保存当前所见一周的安排，之后可独立调整并应用到其他周。':'保存后可给周一到周日选择日模板，也可直接添加任务。')+'</p>')+'<div class="modal-actions"><button class="primary">'+(mode==='meta'?'保存简介':'保存周模板')+'</button></div></form>');}
+function weekTemplateForm(mode,id){const t=state.data.weekTemplates.find(w=>w.id===(id||state.weekTemplateId));modal(mode==='meta'?'修改周模板简介':'保存一份周模板','<form id="week-template-form" data-mode="'+mode+'" data-id="'+(t?.id||'')+'">'+(mode==='meta'?'':'<label for="week-template-name">周模板名称</label><input id="week-template-name" name="name" maxlength="60" required placeholder="例如：工作学习平衡周">')+'<label for="week-template-description">描述（可选）</label><input id="week-template-description" name="description" maxlength="200" value="'+esc(mode==='meta'?t.description:'')+'">'+(mode==='meta'?'':'<p>'+(mode==='save'?'保存当前所见一周的安排，之后可独立调整并应用到其他周。':'保存后可给周一到周日选择日模板，也可直接添加任务。')+'</p>')+'<div class="modal-actions"><button class="primary">'+(mode==='meta'?'保存简介':'保存周模板')+'</button></div></form>'+(mode==='new'?starterTemplateOption('week'):''));}
 function cycleSelectors(days){return '<div class="cycle-selectors">'+days.map((d,i)=>'<label>'+weekdays[i]+'<select name="day'+i+'">'+options({'':'留白',...(d.blocks.length?{'__keep':'保留：'+(d.templateName||'自定义安排')}:{}),...Object.fromEntries(state.data.templates.map(t=>[t.id,t.name]))},d.blocks.length?'__keep':'')+'</select></label>').join('')+'</div>';}
 let cycleDraft=null;
 function cycleForm(id){const selected=state.data.weekTemplates.find(w=>w.id===id);cycleDraft=clone(selected?{...state.data.cycle,sourceWeekTemplateId:selected.id,days:selected.days}:state.data.cycle);modal('每周循环 · 7 天为一个周期','<form id="cycle-form"><label class="check-label"><input type="checkbox" name="enabled" '+(selected||state.data.cycle.enabled?'checked':'')+'>启用每周重复</label><div class="form-row"><div><label>开始日期</label><input name="start" type="date" required value="'+(state.data.cycle.enabled?state.data.cycle.startDate:mondayOf(state.date))+'"></div><div><label>结束日期（可留空）</label><input name="end" type="date" value="'+(state.data.cycle.endDate||'')+'"></div></div>'+cycleSelectors(cycleDraft.days)+'<div class="callout">循环会自动出现在对应日期。已手动调整过的日期保持原样；在日视图中可选择「恢复周循环」。修改日模板后，在这里重新选择该模板才会更新循环。</div><div class="error" id="form-error"></div><div class="modal-actions"><button class="primary">保存周循环</button></div></form>');}
@@ -713,15 +810,16 @@ function handleV2Action(a,id,el){
  else if(a==='edit-tag')tagForm(id);
  else if(a==='tag-color-preset')selectTagColor(el.dataset.tagColor);
  else if(a==='delete-tag')deleteTagForm(id);
- else if(a==='prev-week'||a==='next-week'){state.date=addDays(state.date,a==='prev-week'?-7:7);render();}
- else if(a==='week-today'){state.date=dayKey();render();}
+ else if(a==='prev-week'||a==='next-week')selectWeekDate(addDays(state.date,a==='prev-week'?-7:7));
+ else if(a==='week-today')selectWeekDate(dayKey());
+ else if(a==='week-select-date')selectWeekDate(el.dataset.date);
  else if(a==='template-kind'){state.templateKind=id;render();}
  else if(a==='new-week-template')weekTemplateForm('new');
  else if(a==='save-week-template')weekTemplateForm('save');
  else if(a==='week-template-meta')weekTemplateForm('meta',id||state.weekTemplateId);
  else if(a==='edit-week-template'){state.weekTemplateId=id;state.templateId=null;state.tab='templates';render();}
  else if(a==='finish-week-edit'){state.weekTemplateId=null;state.templateKind='week';render();}
- else if(a==='copy-week-template'){commit(d=>{const w=clone(d.weekTemplates.find(w=>w.id===id));w.id=uid();w.name=w.name.slice(0,54)+' · 副本';w.days.forEach(day=>day.blocks=freshBlocks(day.blocks));d.weekTemplates.push(w);},'周模板已复制');}
+ else if(a==='copy-week-template'){commit(d=>{const w=templateCopy(d.weekTemplates.find(w=>w.id===id));w.days.forEach(day=>day.blocks=freshBlocks(day.blocks));d.weekTemplates.push(w);},'周模板已复制');}
  else if(a==='delete-week-template')confirmTemplateDelete('week',id);
  else if(a==='confirm-delete-week-template')deleteTemplate('week',id);
  else if(a==='apply-week-template')weekApplyForm(id);

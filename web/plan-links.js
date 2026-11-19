@@ -63,7 +63,7 @@ export function refreshPlanLinks(root=document) {
     for(const group of groups){
       const plan=group.plan.element,from=plan.getBoundingClientRect();
       board.cardKeys.set(plan,group.key);
-      annotatePlanLink(plan,'就近对照 '+group.label+' · 一对一匹配实际记录',group.label,'matched');
+      annotatePlanLink(plan,'就近对照 '+group.label+' · 一对一匹配执行记录',group.label,'matched');
       for(const actual of group.actuals){
         const card=actual.element,to=card.getBoundingClientRect();
         board.cardKeys.set(card,group.key);
@@ -73,7 +73,7 @@ export function refreshPlanLinks(root=document) {
         layer.append(path);board.pathKeys.set(path,group.key);
       }
     }
-    for(const {card,reason} of unmatched)annotatePlanLink(card.element,reason==='unplanned'?'临时任务 · 无计划时段':reason==='continuation'?'同一实际记录的分段 · 连线只使用一个片段':reason==='additional'?'同一计划的其他实际片段 · 用时已累计，连线仅显示最近一条':'未参与连线 · 当前没有对应的可见计划',reason==='unplanned'?'临时':'未连线',reason);
+    for(const {card,reason} of unmatched)annotatePlanLink(card.element,reason==='unplanned'?'临时任务 · 无计划时段':reason==='continuation'?'同一执行记录的分段 · 连线只使用一个片段':reason==='additional'?'同一计划的其他执行片段 · 用时已累计，连线仅显示最近一条':'未参与连线 · 当前没有对应的可见计划',reason==='unplanned'?'临时':'未连线',reason);
     container.append(layer);
     const active=cards.find(card=>card.contains(document.activeElement))||cards.find(card=>card.matches?.(':hover'));
     if(active)emphasizePlanLink(board,board.cardKeys.get(active)||null);

@@ -2,7 +2,7 @@ import test from 'node:test';
 import assert from 'node:assert/strict';
 import { DatabaseSync } from 'node:sqlite';
 import { readFileSync } from 'node:fs';
-import { seedData, validateData, migrateData } from '../lib/planner.mjs';
+import { seedData, legacySeedData, validateData, migrateData } from '../lib/planner.mjs';
 import { handlePlanner } from '../worker/api.mjs';
 
 const endpoint = 'https://planner.example/api/planner';
@@ -38,7 +38,7 @@ test('completion preferences are optional booleans and survive backup migration 
   assert.ok(defaults.groups.every(group => group.countTowardsCompletion === undefined));
   assert.deepEqual(migrateData(defaults).groups, defaults.groups);
   for (const version of [2, 3]) {
-    const data = seedData(); data.version = version;
+    const data = migrateData(legacySeedData()); data.version = version;
     data.groups.find(group => group.id === 'life').countTowardsCompletion = false;
     data.groups.find(group => group.id === 'work').countTowardsCompletion = true;
     const backup = JSON.parse(JSON.stringify(data));

@@ -1,6 +1,6 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import {seedData,validateData,migrateData,effectiveTagId,tagForItem,resolveDay} from '../lib/planner.mjs';
+import {seedData,legacySeedData,validateData,migrateData,effectiveTagId,tagForItem,resolveDay,MAX_STATE_BYTES} from '../lib/planner.mjs';
 import {validateTracking,startTracking,pauseTracking,resumeTracking,stopTracking,actualSegments,summarizeTracking} from '../lib/tracking.mjs';
 import {createChanges,applyChanges} from '../lib/sync.mjs';
 
@@ -8,8 +8,8 @@ const date='2026-11-16',instant=clock=>Date.parse(date+'T'+clock+'Z');
 const block=(id='planned',extra={})=>({id,title:'项目任务',category:'work',start:600,duration:60,done:false,...extra});
 const lists=data=>[data.tasks,...data.templates.map(t=>t.blocks),...Object.values(data.days),...data.weekTemplates.flatMap(t=>t.days.map(d=>d.blocks)),...data.cycle.days.map(d=>d.blocks)];
 function legacyData(){
-  const data=seedData();data.timezone='UTC';data.days[date]=[block()];
-  delete data.tags;
+  const data=migrateData(legacySeedData());data.timezone='UTC';data.days[date]=[block()];
+  delete data.tags;delete data.tagDefaultsVersion;
   for(const items of lists(data))for(const item of items)delete item.tagId;
   data.tracking={sessions:[{id:'old-session',planDate:date,blockId:'planned',title:'项目任务',category:'work',startedAt:instant('10:00:00'),endedAt:instant('10:10:00')}],
     timer:{id:'old-timer',planDate:date,blockId:'planned',title:'项目任务',category:'work',startedAt:null}};
@@ -21,16 +21,77 @@ test('legacy tag migration preserves every project and clock while independently
   const before=structuredClone(data),upgraded=migrateData(data);
   assert.equal(validateData(data),true);assert.equal(validateData(upgraded),true);assert.equal(upgraded.version,3);
   assert.deepEqual(upgraded.groups,before.groups);
-  assert.deepEqual(upgraded.tags,before.groups.map(({id,name,color})=>({id,name,color})));
+  const inherited=before.groups.map(({id,name,color})=>({id,name,color:id==='rest'?'#C49A68':color}));
+  assert.deepEqual(upgraded.tags,[...inherited,{id:'creative',name:'创作',color:'#718DB5'}]);
   for(const items of lists(upgraded))for(const item of items)assert.equal(item.tagId,item.category);
   assert.equal(upgraded.tracking.sessions[0].tagId,'work');assert.equal(upgraded.tracking.timer.tagId,'work');
-  const stripAdded=structuredClone(upgraded);delete stripAdded.tags;
+  const stripAdded=structuredClone(upgraded);delete stripAdded.tags;delete stripAdded.tagDefaultsVersion;
   for(const items of lists(stripAdded))for(const item of items)delete item.tagId;
   for(const item of [...stripAdded.tracking.sessions,stripAdded.tracking.timer])delete item.tagId;
   assert.deepEqual(stripAdded,before);assert.deepEqual(data,before);
   assert.deepEqual(migrateData(upgraded),upgraded,'repeated migration is idempotent');
   upgraded.tags[0].color='#123456';assert.notEqual(upgraded.groups[0].color,upgraded.tags[0].color);
   assert.equal(data.groups[0].color,before.groups[0].color);
+});
+
+test('the initial palette updates only the untouched rest tag and preserves user labels and group colors',()=>{
+  const fresh=seedData(), creative=fresh.tags.find(tag=>tag.name==='创作');
+  assert.deepEqual(creative,{id:'creative',name:'创作',color:'#718DB5'});
+  assert.equal(fresh.tags.find(tag=>tag.id==='rest').color,'#C49A68');
+  assert.equal(fresh.groups.find(group=>group.id==='rest').color,'#AC95B8');
+  assert.ok(!fresh.groups.some(group=>group.name==='创作'));
+  const old=migrateData(legacySeedData());delete old.tagDefaultsVersion;
+  const rest=old.tags.find(tag=>tag.id==='rest');rest.color='#123456';
+  old.tags=old.tags.filter(tag=>tag.id!==creative.id);
+  old.tags.push({id:'own-creative',name:'创作',color:'#abcdef',countTowardsCompletion:false});
+  assert.deepEqual(migrateData(old).tags,old.tags);
+  rest.color='#ac95b8';rest.name='我的休闲';
+  assert.deepEqual(migrateData(old).tags,old.tags);
+  old.tags=old.tags.filter(tag=>tag.id!=='rest');
+  for(const items of lists(old))for(const item of items)if(item.tagId==='rest')item.tagId='work';
+  assert.deepEqual(migrateData(old).tags,old.tags);
+  old.tags=old.tags.filter(tag=>tag.id!=='own-creative');
+  old.groups.push({id:'creative',name:'旧项目',color:'#987654'});
+  old.tasks[0].category='creative';delete old.tasks[0].tagId;
+  assert.equal(migrateData(old).tasks[0].tagId,old.tags[0].id,'a new default cannot reclassify legacy untagged tasks');
+});
+
+test('palette migration respects full tag lists, occupied ids, and later backup edits',()=>{
+  const old=migrateData(legacySeedData());delete old.tagDefaultsVersion;
+  old.tags.find(tag=>tag.id==='creative').name='existing label';
+  const next=migrateData(old);
+  assert.equal(next.tags.find(tag=>tag.name==='创作').id,'creative-2');
+  assert.deepEqual(migrateData(next),next);
+  next.tags=next.tags.filter(tag=>tag.name!=='创作');
+  next.tags.find(tag=>tag.id==='rest').color='#AC95B8';
+  assert.deepEqual(migrateData(JSON.parse(JSON.stringify(next))),next);
+  while(old.tags.length<50)old.tags.push({id:'tag-'+old.tags.length,name:'extra',color:'#454545'});
+  const full=migrateData(old);assert.deepEqual(full.tags,old.tags);assert.ok(validateData(full));
+});
+
+test('a delayed palette upgrade from another device preserves newer deletions and color edits',()=>{
+  const original=migrateData(legacySeedData());delete original.tagDefaultsVersion;
+  original.tags=original.tags.filter(tag=>tag.name!=='创作');
+  original.tags.find(tag=>tag.id==='rest').color='#AC95B8';
+  const phone=migrateData(original),migration=createChanges(original,phone);
+  assert.deepEqual(applyChanges(original,migration).tags,phone.tags);
+  const desktop=structuredClone(phone);desktop.tags=desktop.tags.filter(tag=>tag.name!=='创作');
+  desktop.tags.find(tag=>tag.id==='rest').color='#AC95B8';
+  phone.tasks[0].done=true;
+  const synced=applyChanges(desktop,createChanges(original,phone));
+  assert.deepEqual(synced.tags,desktop.tags);assert.equal(synced.tasks[0].done,true);
+});
+
+test('optional defaults defer when an old backup is at its byte limit',()=>{
+  const old=migrateData(legacySeedData());delete old.tagDefaultsVersion;
+  old.tags=old.tags.filter(tag=>tag.name!=='创作');
+  old.tags.find(tag=>tag.id==='rest').color='#AC95B8';
+  old.padding='';
+  old.padding='x'.repeat(MAX_STATE_BYTES-new TextEncoder().encode(JSON.stringify(old)).length);
+  assert.equal(validateData(old),true);
+  assert.deepEqual(migrateData(old),old);
+  delete old.padding;
+  assert.ok(migrateData(old).tags.some(tag=>tag.name==='创作'));
 });
 
 test('new data exposes independent labels and missing tag ids keep legacy and custom-group fallback',()=>{

@@ -2,7 +2,7 @@ import test from 'node:test';
 import assert from 'node:assert/strict';
 import { DatabaseSync } from 'node:sqlite';
 import { readFileSync } from 'node:fs';
-import { seedData, validateData, materializeDay, createTagSlot, assignTagSlot } from '../lib/planner.mjs';
+import { seedData, legacySeedData, validateData, migrateData, materializeDay, createTagSlot, assignTagSlot } from '../lib/planner.mjs';
 import { startTracking, stopTracking } from '../lib/tracking.mjs';
 import { createChanges, applyChanges, rebaseChanges, readChangeValue, SyncConflictError, validateChanges } from '../lib/sync.mjs';
 import { handleSync } from '../worker/sync-api.mjs';
@@ -27,12 +27,39 @@ async function initial(env,data=seedData(),user='alice'){const result=await writ
 function change(base,next,id,extra={}){return {mutationId:id,baseRevision:base.revision,baseTimerRevision:base.timerRevision,changes:createChanges(base.data,next),...extra};}
 function withDay(){const data=seedData();data.days['2026-11-16']=[{id:'block-a',title:'阅读',start:600,duration:60,category:'learn',done:false}];data.dayMeta['2026-11-16']={templateId:null,templateName:'自定义安排'};return data;}
 
+test('a late offline upgrade preserves newer tag colors and a deleted creative tag on the server',async()=>{
+  const env=environment();
+  try{
+    const legacy=migrateData(legacySeedData());
+    delete legacy.tagDefaultsVersion;
+    legacy.tags=legacy.groups.map(({id,name,color})=>({id,name,color}));
+    const original=await initial(env,legacy);
+    const defaults=migrateData(original.data);
+    const desktop=await write(env,change(original,defaults,'upgrade-desktop'));
+    assert.equal(desktop.status,200);
+    assert.equal(desktop.data.tags.find(tag=>tag.id==='rest').color,'#C49A68');
+    assert.equal(desktop.data.tags.find(tag=>tag.name==='创作').color,'#718DB5');
+
+    const customized=copy(desktop.data);
+    customized.tags=customized.tags.filter(tag=>tag.name!=='创作');
+    customized.tags.find(tag=>tag.id==='rest').color='#187252';
+    assert.equal((await write(env,change(desktop,customized,'adjust-tags'))).status,200);
+
+    const phone=migrateData(original.data);
+    phone.tasks[0].title='离线时修改的任务';
+    assert.equal((await write(env,change(original,phone,'upgrade-phone'))).status,200);
+    const {data}=await read(env);
+    assert.deepEqual(data.tags,customized.tags);
+    assert.equal(data.tasks[0].title,phone.tasks[0].title);
+  }finally{env.close();}
+});
+
 test('guarded edits merge different task fields and independent template edits',()=>{
   const base=seedData(),desktop=copy(base),mobile=copy(base);
   desktop.tasks[0].duration=90;desktop.templates[0].notes='桌面备注';mobile.tasks[0].done=true;
   const merged=applyChanges(mobile,createChanges(base,desktop));
   assert.equal(merged.tasks[0].duration,90);assert.equal(merged.tasks[0].done,true);assert.equal(merged.templates[0].notes,'桌面备注');assert.equal(validateData(merged),true);
-  assert.equal(base.tasks[0].duration,60);assert.equal(mobile.templates[0].notes,undefined);
+  assert.equal(base.tasks[0].duration,60);assert.equal(mobile.templates[0].notes,base.templates[0].notes);
 });
 
 test('group completion preferences sync independently of concurrent group names and reject invalid values',async()=>{

@@ -71,7 +71,7 @@ export async function handleSync(request,env,userId) {
     ||typeof input.mutationId!=='string'||!/^[A-Za-z0-9][A-Za-z0-9._:-]{0,127}$/.test(input.mutationId)
     ||Object.keys(input).some(key=>!['mutationId','baseRevision','baseTimerRevision','changes','replace','data'].includes(key)))return syncJson({error:'同步请求格式不正确。'},400);
   const replacing=input.replace===true;
-  if((syncApiOwn(input,'replace')&&!replacing)||(replacing?(syncApiOwn(input,'changes')||!validateData(input.data)):(syncApiOwn(input,'data')||!validateChanges(input.changes))))return syncJson({error:'请检查同步内容、任务时间和实际记录。'},400);
+  if((syncApiOwn(input,'replace')&&!replacing)||(replacing?(syncApiOwn(input,'changes')||!validateData(input.data)):(syncApiOwn(input,'data')||!validateChanges(input.changes))))return syncJson({error:'请检查同步内容、任务时间和执行记录。'},400);
   const timerChanged=replacing||input.changes.some(isTimerChange);
   if((timerChanged&&!syncRevision(input.baseTimerRevision))||(syncApiOwn(input,'baseTimerRevision')&&!syncRevision(input.baseTimerRevision)))return syncJson({error:'缺少有效的计时器版本，请重新连接后同步。'},400);
   try{
@@ -88,9 +88,9 @@ export async function handleSync(request,env,userId) {
         if(error instanceof SyncConflictError)return syncConflict(current,error.paths,error.message);
         return syncJson({error:'同步修改格式不正确。'},400);
       }
-      if(!validateData(data))return syncConflict(current,[['validation']],'合并后的安排或实际记录发生重叠，请核对后重试。');
+      if(!validateData(data))return syncConflict(current,[['validation']],'合并后的安排或执行记录发生重叠，请核对后重试。');
       const futurePaths=syncFutureChanges(current.data,data,Date.now());
-      if(futurePaths.length)return syncConflict(current,futurePaths,'设备时间可能不正确：实际记录超过服务器时间 5 分钟，请校准时间并核对记录。');
+      if(futurePaths.length)return syncConflict(current,futurePaths,'设备时间可能不正确：执行记录超过服务器时间 5 分钟，请校准时间并核对记录。');
       const serialized=JSON.stringify(data);
       if(new TextEncoder().encode(serialized).length>MAX_SYNC_STATE_BYTES)return syncJson({error:'云端单份数据接近容量上限，请先导出并整理历史记录。',code:'STATE_TOO_LARGE'},413);
       const revision=current.revision+1,timerRevision=current.timerRevision+(timerChanged?1:0);

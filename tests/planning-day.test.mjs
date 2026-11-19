@@ -1,11 +1,11 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import {DAY_START,DAY_END,seedData,validateData,migrateData,planningDate,addDays,resolveDay} from '../lib/planner.mjs';
+import {DAY_START,DAY_END,seedData,legacySeedData,validateData,migrateData,planningDate,addDays,resolveDay} from '../lib/planner.mjs';
 
 const block=(id,start,duration=30,extra={})=>({id,title:id,start,duration,category:'work',done:false,...extra});
 const emptyDay=()=>({templateId:null,templateName:'',blocks:[]});
 function legacyV2(){
-  const data=seedData();data.version=2;
+  const data=migrateData(legacySeedData());data.version=2;
   data.days={};data.dayMeta={};data.weekTemplates=[];
   data.cycle={enabled:false,startDate:'2026-12-28',endDate:null,sourceWeekTemplateId:null,days:Array.from({length:7},emptyDay)};
   return data;

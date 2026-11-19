@@ -41,7 +41,7 @@ test('comparison keeps each plan and actual pair on one grid with editable plan 
  assert.equal((html.match(/class="week-view-scroll"/g)||[]).length,1);
  assert.equal((html.match(/class="week-time-axis"/g)||[]).length,7);
  assert.equal((html.match(/class="week-day-pair"/g)||[]).length,7);
- assert.equal((html.match(/class="week-column-labels"><span>计划<\/span><span>实际<\/span>/g)||[]).length,7);
+ assert.equal((html.match(/class="week-column-labels"><span>计划<\/span><span>执行<\/span>/g)||[]).length,7);
  assert.equal((html.match(/data-action="new-week-block"/g)||[]).length,336);
  assert.equal((html.match(/data-grid-start="240" data-grid-end="1680"/g)||[]).length,7);
  assert.match(html,/<div class="week-day-column" data-date="2026-11-09" data-weekday="0"/);
@@ -91,7 +91,7 @@ test('daily detail toggles retain date columns, comparison labels and editable t
  assert.equal((html.match(/data-details-expanded="true"/g)||[]).length,1);
  assert.match(html,/data-id="2026-11-10"[^>]*aria-expanded="true"[^>]*aria-controls="week-day-details-1"/);
  assert.equal((html.match(/class="week-day-pair"/g)||[]).length,7);
- assert.equal((html.match(/class="week-column-labels"><span>计划<\/span><span>实际<\/span>/g)||[]).length,7);
+ assert.equal((html.match(/class="week-column-labels"><span>计划<\/span><span>执行<\/span>/g)||[]).length,7);
  assert.equal((html.match(/data-action="assign-day-template"/g)||[]).length,7);
  assert.equal((html.match(/data-action="new-week-block"/g)||[]).length,336);
  assert.doesNotMatch(html,/week-view-footer|每天 04:00 → 次日 04:00|显示按最近半小时取整/);

@@ -1,7 +1,7 @@
 // Only the application shell is cached. User data and credentials never enter
 // CacheStorage; cloud data is stored separately by sync-storage.js.
 const CACHE_PREFIX = 'weekprofiler-shell-';
-const CACHE_NAME = CACHE_PREFIX + '2026-11-19-v11';
+const CACHE_NAME = CACHE_PREFIX + '2026-11-20-v12';
 const ASSETS = new Map([
   ['/', 'text/html'],
   ['/app.js', 'javascript'],

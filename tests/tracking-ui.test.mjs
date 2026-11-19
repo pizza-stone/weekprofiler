@@ -9,7 +9,7 @@ const date='2026-11-15',instant=Date.parse(date+'T10:10:00Z');
 const block={id:'study',title:'学习 <笔记>',category:'learn',start:600,duration:60,done:false};
 function harness(){
   const data=seedData();data.timezone='UTC';data.days[date]=[{...block}];
-  const state={data,date,tab:'day',viewMode:'plan',weekFilter:'all'};
+  const state={data,date,tab:'day',viewMode:'plan',weekViewMode:'compare',weekFilter:'all'};
   let next=0,closed=0,renders=0,lastModal,lastToast,writes=0;
   const error={textContent:''},elapsed={textContent:''},metrics={innerHTML:'',dataset:{scope:'day'}},layer={innerHTML:'',dataset:{actualDate:date,actualKind:'day'},contains:()=>false};
   const context=vm.createContext({model,now:instant,localStorage:{setItem(){}},FormData:class{constructor(form){this.values=form.values;}get(key){return this.values[key];}},document:{activeElement:null,querySelector:s=>s==='#actual-error'||s==='#new-timer-error'?error:s==='#modal'?{open:false}:null,querySelectorAll:s=>s==='[data-timer-elapsed]'?[elapsed]:s==='[data-tracking-metrics]'?[metrics]:s==='[data-actual-date]'?[layer]:[]}});
@@ -47,6 +47,19 @@ test('one active or paused timer blocks a second start and mode switching never 
   h.context.now+=1000;h.action('timer-pause');h.action('timer-start');assert.equal(h.state.data.tracking.timer.startedAt,null);
   const before=JSON.stringify(h.state.data);h.action('tracking-view','compare');assert.equal(h.state.viewMode,'compare');assert.equal(JSON.stringify(h.state.data),before);
 });
+test('week and day view choices persist independently and label the execution lane consistently',()=>{
+  const h=harness(),saved=new Map();
+  h.context.localStorage.setItem=(key,value)=>saved.set(key,value);
+  assert.match(h.ui.summary(true),/data-id="compare" aria-pressed="true">计划＋执行/);
+  h.state.tab='week';h.action('tracking-view','actual');
+  assert.equal(saved.get('weekprofiler-week-view-mode'),'actual');
+  assert.equal(h.state.viewMode,'plan');
+  h.state.tab='day';h.action('tracking-view','compare');
+  assert.equal(saved.get('weekprofiler-view-mode'),'compare');
+  assert.match(h.ui.summary(true),/data-id="actual" aria-pressed="true">执行/);
+  assert.equal(h.state.weekViewMode,'actual');
+});
+
 test('manual actual record keeps precise minutes, blocks overlap/future intervals and displays nearest-half-hour cards',()=>{
   const h=harness();h.context.now=Date.parse(date+'T13:00:00Z');
   h.ui.submit(h.form({blockId:'study',startedAt:date+'T10:10:00',endedAt:date+'T10:50:00'}));
@@ -153,13 +166,13 @@ test('weekly quick timer adds only actual time, retaining its identity across pa
   const plans=JSON.stringify(h.state.data.days),tasks=JSON.stringify(h.state.data.tasks);
   assert.match(h.ui.summary(true),/data-action="timer-new"/);
   assert.doesNotMatch(h.ui.summary(false),/data-action="timer-new"/);
-  h.state.weekFilter='learn';h.action('timer-new');
+  h.state.weekFilter='learn';h.state.weekViewMode='plan';h.action('timer-new');
   assert.equal(h.lastModal.title,'新建并计时');assert.match(h.lastModal.body,/value="learn" selected/);
   assert.equal(h.writes,0,'opening the form must not start the timer');
   h.ui.submit(newTimerForm('  临时 <整理>  '));
   const timer=h.state.data.tracking.timer;
   assert.equal(timer.unplanned,true);assert.equal(timer.title,'临时 <整理>');assert.equal(timer.startedAt,instant);
-  assert.equal(h.state.tab,'week');assert.equal(h.state.viewMode,'compare');
+  assert.equal(h.state.tab,'week');assert.equal(h.state.weekViewMode,'compare');assert.equal(h.state.viewMode,'plan');
   assert.match(h.ui.bar(),/临时 &lt;整理&gt;/);
   h.context.now+=12000;h.action('timer-pause');
   h.context.now+=30000;h.action('timer-resume');
@@ -176,11 +189,11 @@ test('weekly quick timer adds only actual time, retaining its identity across pa
 
 test('quick timer from an old week uses the current timezone planning date and keeps actual mode',()=>{
   for(const [now,expected] of [['2026-11-15T19:59:59Z','2026-11-15'],['2026-11-15T20:00:00Z','2026-11-16']]){
-    const h=harness();h.state.date='2026-10-01';h.state.tab='week';h.state.viewMode='actual';h.state.data.timezone='Asia/Shanghai';h.context.now=Date.parse(now);
+    const h=harness();h.state.date='2026-10-01';h.state.tab='week';h.state.weekViewMode='actual';h.state.data.timezone='Asia/Shanghai';h.context.now=Date.parse(now);
     h.action('timer-new');assert.match(h.lastModal.body,new RegExp(expected));
     h.ui.submit(newTimerForm());
     assert.equal(h.state.data.tracking.timer.planDate,expected);assert.equal(h.state.date,expected);
-    assert.equal(h.state.viewMode,'actual');assert.equal(h.state.data.tracking.timer.startedAt,Date.parse(now));
+    assert.equal(h.state.weekViewMode,'actual');assert.equal(h.state.data.tracking.timer.startedAt,Date.parse(now));
   }
 });
 
@@ -358,7 +371,7 @@ function shownRecordValues(body){return {
 test('repeated same-task legacy records agree across per-plan totals, history, editor and visible link owner',()=>{
   const {h,planDate}=repeatedDayHarness(),before=JSON.stringify(h.state.data);
   for(const planned of h.state.data.days[planDate]){
-    const tools=h.ui.blockTools(planned,planDate);assert.match(tools,/<strong>实际 60 分钟<\/strong>/);assert.match(tools,/已覆盖 60 分钟 · 覆盖率 100%/);
+    const tools=h.ui.blockTools(planned,planDate);assert.match(tools,/<strong>执行 60 分钟<\/strong>/);assert.match(tools,/已覆盖 60 分钟 · 覆盖率 100%/);
   }
   assert.match(h.ui.summary(),/<strong>120 分钟<\/strong>/);assert.match(h.ui.summary(),/已覆盖 120 分钟/);
   h.action('actual-history','afternoon',planDate);
@@ -405,7 +418,7 @@ test('manually recording a cycle occurrence fixes that day before later cycle ed
   assert.equal(h.state.data.days[planDate][0].id,planned.id);
   h.state.data.cycle.days[0].blocks=[];
   const stillPlanned=resolveDay(h.state.data,planDate).blocks[0];assert.equal(stillPlanned.id,planned.id);
-  assert.match(h.ui.blockTools(stillPlanned,planDate),/<strong>实际 60 分钟<\/strong>/);
+  assert.match(h.ui.blockTools(stillPlanned,planDate),/<strong>执行 60 分钟<\/strong>/);
   assert.match(h.ui.summary(),/时长覆盖率<\/small><strong>100%<\/strong><span>已覆盖 60 分钟/);
   h.action('actual-history',planned.id,planDate);assert.match(h.lastModal.body,new RegExp('data-id="'+saved.id+'"'));
 });
