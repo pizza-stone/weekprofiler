@@ -1,0 +1,2310 @@
+{
+  "app": "weekprofiler",
+  "exportedAt": "2026-11-20T00:00:00+08:00",
+  "data": {
+    "version": 3,
+    "timezone": "Asia/Shanghai",
+    "tasks": [
+      {
+        "id": "priorities",
+        "title": "梳理本周重点",
+        "duration": 30,
+        "category": "product",
+        "tagId": "work",
+        "reusable": true,
+        "done": false
+      },
+      {
+        "id": "prototype",
+        "title": "完善产品原型",
+        "duration": 90,
+        "category": "product",
+        "tagId": "work",
+        "reusable": true,
+        "done": false
+      },
+      {
+        "id": "implement",
+        "title": "实现核心功能",
+        "duration": 120,
+        "category": "product",
+        "tagId": "work",
+        "reusable": true,
+        "done": false
+      },
+      {
+        "id": "feedback",
+        "title": "整理用户反馈",
+        "duration": 60,
+        "category": "product",
+        "tagId": "work",
+        "reusable": true,
+        "done": false
+      },
+      {
+        "id": "review",
+        "title": "回顾迭代成果",
+        "duration": 60,
+        "category": "product",
+        "tagId": "work",
+        "reusable": true,
+        "done": false
+      },
+      {
+        "id": "morning",
+        "title": "晨间阅读",
+        "duration": 30,
+        "category": "growth",
+        "tagId": "learn",
+        "reusable": true,
+        "done": false
+      },
+      {
+        "id": "read",
+        "title": "阅读与笔记",
+        "duration": 60,
+        "category": "growth",
+        "tagId": "learn",
+        "reusable": true,
+        "done": false
+      },
+      {
+        "id": "practice",
+        "title": "练习一个新技能",
+        "duration": 60,
+        "category": "growth",
+        "tagId": "learn",
+        "reusable": true,
+        "done": false
+      },
+      {
+        "id": "sketch",
+        "title": "勾勒作品草图",
+        "duration": 30,
+        "category": "studio",
+        "tagId": "creative",
+        "reusable": true,
+        "done": false
+      },
+      {
+        "id": "write",
+        "title": "写一段初稿",
+        "duration": 60,
+        "category": "studio",
+        "tagId": "creative",
+        "reusable": true,
+        "done": false
+      },
+      {
+        "id": "polish",
+        "title": "打磨个人作品",
+        "duration": 90,
+        "category": "studio",
+        "tagId": "creative",
+        "reusable": true,
+        "done": false
+      },
+      {
+        "id": "lunch",
+        "title": "午休与散步",
+        "duration": 60,
+        "category": "daily",
+        "tagId": "rest",
+        "reusable": true,
+        "done": false
+      },
+      {
+        "id": "sport",
+        "title": "运动与拉伸",
+        "duration": 60,
+        "category": "daily",
+        "tagId": "life",
+        "reusable": true,
+        "done": false
+      },
+      {
+        "id": "chores",
+        "title": "整理生活杂事",
+        "duration": 60,
+        "category": "daily",
+        "tagId": "life",
+        "reusable": true,
+        "done": false
+      },
+      {
+        "id": "week-review",
+        "title": "每周复盘",
+        "duration": 30,
+        "category": "growth",
+        "tagId": "learn",
+        "reusable": true,
+        "done": false
+      },
+      {
+        "id": "next-week",
+        "title": "规划下一周",
+        "duration": 30,
+        "category": "daily",
+        "tagId": "life",
+        "reusable": true,
+        "done": false
+      }
+    ],
+    "days": {
+      "2026-11-16": [
+        {
+          "id": "f0",
+          "taskId": "morning",
+          "title": "晨间阅读",
+          "start": 510,
+          "duration": 30,
+          "category": "growth",
+          "tagId": "learn",
+          "done": true
+        },
+        {
+          "id": "f1",
+          "taskId": "prototype",
+          "title": "完善产品原型",
+          "start": 570,
+          "duration": 90,
+          "category": "product",
+          "tagId": "work",
+          "done": true
+        },
+        {
+          "id": "f2",
+          "taskId": "lunch",
+          "title": "午休与散步",
+          "start": 720,
+          "duration": 60,
+          "category": "daily",
+          "tagId": "rest",
+          "done": true
+        },
+        {
+          "id": "f3",
+          "taskId": "implement",
+          "title": "实现核心功能",
+          "start": 840,
+          "duration": 120,
+          "category": "product",
+          "tagId": "work",
+          "done": true
+        },
+        {
+          "id": "f4",
+          "taskId": "practice",
+          "title": "练习一个新技能",
+          "start": 1170,
+          "duration": 90,
+          "category": "growth",
+          "tagId": "learn",
+          "done": false
+        },
+        {
+          "id": "f5",
+          "taskId": "sport",
+          "title": "运动与拉伸",
+          "start": 1290,
+          "duration": 60,
+          "category": "daily",
+          "tagId": "life",
+          "done": true
+        }
+      ],
+      "2026-11-17": [
+        {
+          "id": "c0",
+          "taskId": "morning",
+          "title": "晨间阅读",
+          "start": 510,
+          "duration": 30,
+          "category": "growth",
+          "tagId": "learn",
+          "done": true
+        },
+        {
+          "id": "c1",
+          "taskId": "polish",
+          "title": "打磨个人作品",
+          "start": 570,
+          "duration": 90,
+          "category": "studio",
+          "tagId": "creative",
+          "done": true
+        },
+        {
+          "id": "c2",
+          "taskId": "lunch",
+          "title": "午休与散步",
+          "start": 720,
+          "duration": 60,
+          "category": "daily",
+          "tagId": "rest",
+          "done": true
+        },
+        {
+          "id": "c3",
+          "taskId": "implement",
+          "title": "实现核心功能",
+          "start": 840,
+          "duration": 120,
+          "category": "product",
+          "tagId": "work",
+          "done": true
+        },
+        {
+          "id": "c4",
+          "taskId": "read",
+          "title": "阅读与笔记",
+          "start": 1170,
+          "duration": 60,
+          "category": "growth",
+          "tagId": "learn",
+          "done": true
+        },
+        {
+          "id": "c5",
+          "taskId": "sport",
+          "title": "运动与拉伸",
+          "start": 1290,
+          "duration": 60,
+          "category": "daily",
+          "tagId": "life",
+          "done": true
+        }
+      ],
+      "2026-11-18": [
+        {
+          "id": "f0",
+          "taskId": "morning",
+          "title": "晨间阅读",
+          "start": 510,
+          "duration": 30,
+          "category": "growth",
+          "tagId": "learn",
+          "done": true
+        },
+        {
+          "id": "f1",
+          "taskId": "prototype",
+          "title": "完善产品原型",
+          "start": 570,
+          "duration": 90,
+          "category": "product",
+          "tagId": "work",
+          "done": true
+        },
+        {
+          "id": "f2",
+          "taskId": "lunch",
+          "title": "午休与散步",
+          "start": 720,
+          "duration": 60,
+          "category": "daily",
+          "tagId": "rest",
+          "done": true
+        },
+        {
+          "id": "f3",
+          "taskId": "implement",
+          "title": "实现核心功能",
+          "start": 840,
+          "duration": 120,
+          "category": "product",
+          "tagId": "work",
+          "done": true
+        },
+        {
+          "id": "f4",
+          "taskId": "practice",
+          "title": "练习一个新技能",
+          "start": 1170,
+          "duration": 90,
+          "category": "growth",
+          "tagId": "learn",
+          "done": false
+        },
+        {
+          "id": "f5",
+          "taskId": "sport",
+          "title": "运动与拉伸",
+          "start": 1290,
+          "duration": 60,
+          "category": "daily",
+          "tagId": "life",
+          "done": true
+        }
+      ],
+      "2026-11-19": [
+        {
+          "id": "c0",
+          "taskId": "morning",
+          "title": "晨间阅读",
+          "start": 510,
+          "duration": 30,
+          "category": "growth",
+          "tagId": "learn",
+          "done": true
+        },
+        {
+          "id": "c1",
+          "taskId": "polish",
+          "title": "打磨个人作品",
+          "start": 570,
+          "duration": 90,
+          "category": "studio",
+          "tagId": "creative",
+          "done": true
+        },
+        {
+          "id": "c2",
+          "taskId": "lunch",
+          "title": "午休与散步",
+          "start": 720,
+          "duration": 60,
+          "category": "daily",
+          "tagId": "rest",
+          "done": true
+        },
+        {
+          "id": "c3",
+          "taskId": "implement",
+          "title": "实现核心功能",
+          "start": 840,
+          "duration": 120,
+          "category": "product",
+          "tagId": "work",
+          "done": true
+        },
+        {
+          "id": "c4",
+          "taskId": "read",
+          "title": "阅读与笔记",
+          "start": 1170,
+          "duration": 60,
+          "category": "growth",
+          "tagId": "learn",
+          "done": false
+        },
+        {
+          "id": "c5",
+          "taskId": "sport",
+          "title": "运动与拉伸",
+          "start": 1290,
+          "duration": 60,
+          "category": "daily",
+          "tagId": "life",
+          "done": true
+        }
+      ]
+    },
+    "templates": [
+      {
+        "id": "focus",
+        "name": "专注工作日",
+        "description": "上午推进重点，下午留给深度工作，晚间安排学习。",
+        "blocks": [
+          {
+            "id": "f0",
+            "taskId": "morning",
+            "title": "晨间阅读",
+            "start": 510,
+            "duration": 30,
+            "category": "growth",
+            "tagId": "learn",
+            "done": false
+          },
+          {
+            "id": "f1",
+            "taskId": "prototype",
+            "title": "完善产品原型",
+            "start": 570,
+            "duration": 90,
+            "category": "product",
+            "tagId": "work",
+            "done": false
+          },
+          {
+            "id": "f2",
+            "taskId": "lunch",
+            "title": "午休与散步",
+            "start": 720,
+            "duration": 60,
+            "category": "daily",
+            "tagId": "rest",
+            "done": false
+          },
+          {
+            "id": "f3",
+            "taskId": "implement",
+            "title": "实现核心功能",
+            "start": 840,
+            "duration": 120,
+            "category": "product",
+            "tagId": "work",
+            "done": false
+          },
+          {
+            "id": "f4",
+            "kind": "tag-slot",
+            "tagId": "learn",
+            "title": "待选任务",
+            "start": 1170,
+            "duration": 90,
+            "done": false
+          },
+          {
+            "id": "f5",
+            "taskId": "sport",
+            "title": "运动与拉伸",
+            "start": 1290,
+            "duration": 60,
+            "category": "daily",
+            "tagId": "life",
+            "done": false
+          }
+        ],
+        "notes": "上午只做一件重要的事；学习时段当天再选内容。临时会议可以移动当天安排，模板仍然保留。"
+      },
+      {
+        "id": "creative-day",
+        "name": "创作日",
+        "description": "为创作留出整段时间，具体做什么留到当天决定。",
+        "blocks": [
+          {
+            "id": "c0",
+            "taskId": "morning",
+            "title": "晨间阅读",
+            "start": 510,
+            "duration": 30,
+            "category": "growth",
+            "tagId": "learn",
+            "done": false
+          },
+          {
+            "id": "c1",
+            "kind": "tag-slot",
+            "tagId": "creative",
+            "title": "待选任务",
+            "start": 570,
+            "duration": 90,
+            "done": false
+          },
+          {
+            "id": "c2",
+            "taskId": "lunch",
+            "title": "午休与散步",
+            "start": 720,
+            "duration": 60,
+            "category": "daily",
+            "tagId": "rest",
+            "done": false
+          },
+          {
+            "id": "c3",
+            "taskId": "implement",
+            "title": "实现核心功能",
+            "start": 840,
+            "duration": 120,
+            "category": "product",
+            "tagId": "work",
+            "done": false
+          },
+          {
+            "id": "c4",
+            "taskId": "read",
+            "title": "阅读与笔记",
+            "start": 1170,
+            "duration": 60,
+            "category": "growth",
+            "tagId": "learn",
+            "done": false
+          },
+          {
+            "id": "c5",
+            "taskId": "sport",
+            "title": "运动与拉伸",
+            "start": 1290,
+            "duration": 60,
+            "category": "daily",
+            "tagId": "life",
+            "done": false
+          }
+        ],
+        "notes": "创作槽位共 90 分钟：可以先画 30 分钟草图，再写 60 分钟初稿，也可以整段用于打磨作品。"
+      },
+      {
+        "id": "review-day",
+        "name": "复盘日",
+        "description": "收拢本周成果，给下周留一个清晰的起点。",
+        "blocks": [
+          {
+            "id": "r0",
+            "taskId": "morning",
+            "title": "晨间阅读",
+            "start": 510,
+            "duration": 30,
+            "category": "growth",
+            "tagId": "learn",
+            "done": false
+          },
+          {
+            "id": "r1",
+            "taskId": "feedback",
+            "title": "整理用户反馈",
+            "start": 570,
+            "duration": 60,
+            "category": "product",
+            "tagId": "work",
+            "done": false
+          },
+          {
+            "id": "r2",
+            "taskId": "lunch",
+            "title": "午休与散步",
+            "start": 720,
+            "duration": 60,
+            "category": "daily",
+            "tagId": "rest",
+            "done": false
+          },
+          {
+            "id": "r3",
+            "taskId": "review",
+            "title": "回顾迭代成果",
+            "start": 840,
+            "duration": 60,
+            "category": "product",
+            "tagId": "work",
+            "done": false
+          },
+          {
+            "id": "r4",
+            "taskId": "week-review",
+            "title": "每周复盘",
+            "start": 960,
+            "duration": 30,
+            "category": "growth",
+            "tagId": "learn",
+            "done": false
+          },
+          {
+            "id": "r5",
+            "kind": "tag-slot",
+            "tagId": "learn",
+            "title": "待选任务",
+            "start": 1170,
+            "duration": 90,
+            "done": false
+          }
+        ],
+        "notes": "记录哪些安排太满、哪些任务值得增加投入，下周只调整一两个地方。"
+      },
+      {
+        "id": "weekend",
+        "name": "轻量周末",
+        "description": "留给生活、运动和没有截止日期的创作。",
+        "blocks": [
+          {
+            "id": "w0",
+            "kind": "tag-slot",
+            "tagId": "creative",
+            "title": "待选任务",
+            "start": 600,
+            "duration": 90,
+            "done": false
+          },
+          {
+            "id": "w1",
+            "taskId": "lunch",
+            "title": "午休与散步",
+            "start": 750,
+            "duration": 60,
+            "category": "daily",
+            "tagId": "rest",
+            "done": false
+          },
+          {
+            "id": "w2",
+            "taskId": "chores",
+            "title": "整理生活杂事",
+            "start": 900,
+            "duration": 60,
+            "category": "daily",
+            "tagId": "life",
+            "done": false
+          },
+          {
+            "id": "w3",
+            "taskId": "sport",
+            "title": "运动与拉伸",
+            "start": 1020,
+            "duration": 60,
+            "category": "daily",
+            "tagId": "life",
+            "done": false
+          }
+        ],
+        "notes": "不必填满时间轴，空白本身也是计划的一部分。"
+      },
+      {
+        "id": "sunday",
+        "name": "周日充电",
+        "description": "阅读、散步与轻量复盘，为新的一周蓄力。",
+        "blocks": [
+          {
+            "id": "s0",
+            "taskId": "read",
+            "title": "阅读与笔记",
+            "start": 600,
+            "duration": 60,
+            "category": "growth",
+            "tagId": "learn",
+            "done": false
+          },
+          {
+            "id": "s1",
+            "taskId": "lunch",
+            "title": "午休与散步",
+            "start": 750,
+            "duration": 60,
+            "category": "daily",
+            "tagId": "rest",
+            "done": false
+          },
+          {
+            "id": "s2",
+            "taskId": "sport",
+            "title": "运动与拉伸",
+            "start": 960,
+            "duration": 60,
+            "category": "daily",
+            "tagId": "life",
+            "done": false
+          },
+          {
+            "id": "s3",
+            "taskId": "next-week",
+            "title": "规划下一周",
+            "start": 1200,
+            "duration": 30,
+            "category": "daily",
+            "tagId": "life",
+            "done": false
+          }
+        ],
+        "notes": "先整理任务池，再把重点分配到下一周。"
+      }
+    ],
+    "groups": [
+      {
+        "id": "product",
+        "name": "产品迭代",
+        "color": "#6F987E"
+      },
+      {
+        "id": "growth",
+        "name": "学习计划",
+        "color": "#9992C0"
+      },
+      {
+        "id": "studio",
+        "name": "个人创作",
+        "color": "#718DB5"
+      },
+      {
+        "id": "daily",
+        "name": "日常生活",
+        "color": "#C5A26D",
+        "countTowardsCompletion": false
+      }
+    ],
+    "dayMeta": {
+      "2026-11-16": {
+        "templateId": "focus",
+        "templateName": "专注工作日",
+        "weekTemplateId": "balanced-week"
+      },
+      "2026-11-17": {
+        "templateId": "creative-day",
+        "templateName": "创作日",
+        "weekTemplateId": "balanced-week"
+      },
+      "2026-11-18": {
+        "templateId": "focus",
+        "templateName": "专注工作日",
+        "weekTemplateId": "balanced-week"
+      },
+      "2026-11-19": {
+        "templateId": "creative-day",
+        "templateName": "创作日",
+        "weekTemplateId": "balanced-week"
+      }
+    },
+    "weekTemplates": [
+      {
+        "id": "balanced-week",
+        "name": "专注与创作的一周",
+        "description": "周一三深度工作，周二四创作，周五复盘，周末恢复。",
+        "notes": "这是为 README 创建的虚构示例，所有任务与记录均为演示用途。",
+        "days": [
+          {
+            "templateId": "focus",
+            "templateName": "专注工作日",
+            "blocks": [
+              {
+                "id": "f0",
+                "taskId": "morning",
+                "title": "晨间阅读",
+                "start": 510,
+                "duration": 30,
+                "category": "growth",
+                "tagId": "learn",
+                "done": false
+              },
+              {
+                "id": "f1",
+                "taskId": "prototype",
+                "title": "完善产品原型",
+                "start": 570,
+                "duration": 90,
+                "category": "product",
+                "tagId": "work",
+                "done": false
+              },
+              {
+                "id": "f2",
+                "taskId": "lunch",
+                "title": "午休与散步",
+                "start": 720,
+                "duration": 60,
+                "category": "daily",
+                "tagId": "rest",
+                "done": false
+              },
+              {
+                "id": "f3",
+                "taskId": "implement",
+                "title": "实现核心功能",
+                "start": 840,
+                "duration": 120,
+                "category": "product",
+                "tagId": "work",
+                "done": false
+              },
+              {
+                "id": "f4",
+                "kind": "tag-slot",
+                "tagId": "learn",
+                "title": "待选任务",
+                "start": 1170,
+                "duration": 90,
+                "done": false
+              },
+              {
+                "id": "f5",
+                "taskId": "sport",
+                "title": "运动与拉伸",
+                "start": 1290,
+                "duration": 60,
+                "category": "daily",
+                "tagId": "life",
+                "done": false
+              }
+            ]
+          },
+          {
+            "templateId": "creative-day",
+            "templateName": "创作日",
+            "blocks": [
+              {
+                "id": "c0",
+                "taskId": "morning",
+                "title": "晨间阅读",
+                "start": 510,
+                "duration": 30,
+                "category": "growth",
+                "tagId": "learn",
+                "done": false
+              },
+              {
+                "id": "c1",
+                "kind": "tag-slot",
+                "tagId": "creative",
+                "title": "待选任务",
+                "start": 570,
+                "duration": 90,
+                "done": false
+              },
+              {
+                "id": "c2",
+                "taskId": "lunch",
+                "title": "午休与散步",
+                "start": 720,
+                "duration": 60,
+                "category": "daily",
+                "tagId": "rest",
+                "done": false
+              },
+              {
+                "id": "c3",
+                "taskId": "implement",
+                "title": "实现核心功能",
+                "start": 840,
+                "duration": 120,
+                "category": "product",
+                "tagId": "work",
+                "done": false
+              },
+              {
+                "id": "c4",
+                "taskId": "read",
+                "title": "阅读与笔记",
+                "start": 1170,
+                "duration": 60,
+                "category": "growth",
+                "tagId": "learn",
+                "done": false
+              },
+              {
+                "id": "c5",
+                "taskId": "sport",
+                "title": "运动与拉伸",
+                "start": 1290,
+                "duration": 60,
+                "category": "daily",
+                "tagId": "life",
+                "done": false
+              }
+            ]
+          },
+          {
+            "templateId": "focus",
+            "templateName": "专注工作日",
+            "blocks": [
+              {
+                "id": "f0",
+                "taskId": "morning",
+                "title": "晨间阅读",
+                "start": 510,
+                "duration": 30,
+                "category": "growth",
+                "tagId": "learn",
+                "done": false
+              },
+              {
+                "id": "f1",
+                "taskId": "prototype",
+                "title": "完善产品原型",
+                "start": 570,
+                "duration": 90,
+                "category": "product",
+                "tagId": "work",
+                "done": false
+              },
+              {
+                "id": "f2",
+                "taskId": "lunch",
+                "title": "午休与散步",
+                "start": 720,
+                "duration": 60,
+                "category": "daily",
+                "tagId": "rest",
+                "done": false
+              },
+              {
+                "id": "f3",
+                "taskId": "implement",
+                "title": "实现核心功能",
+                "start": 840,
+                "duration": 120,
+                "category": "product",
+                "tagId": "work",
+                "done": false
+              },
+              {
+                "id": "f4",
+                "kind": "tag-slot",
+                "tagId": "learn",
+                "title": "待选任务",
+                "start": 1170,
+                "duration": 90,
+                "done": false
+              },
+              {
+                "id": "f5",
+                "taskId": "sport",
+                "title": "运动与拉伸",
+                "start": 1290,
+                "duration": 60,
+                "category": "daily",
+                "tagId": "life",
+                "done": false
+              }
+            ]
+          },
+          {
+            "templateId": "creative-day",
+            "templateName": "创作日",
+            "blocks": [
+              {
+                "id": "c0",
+                "taskId": "morning",
+                "title": "晨间阅读",
+                "start": 510,
+                "duration": 30,
+                "category": "growth",
+                "tagId": "learn",
+                "done": false
+              },
+              {
+                "id": "c1",
+                "kind": "tag-slot",
+                "tagId": "creative",
+                "title": "待选任务",
+                "start": 570,
+                "duration": 90,
+                "done": false
+              },
+              {
+                "id": "c2",
+                "taskId": "lunch",
+                "title": "午休与散步",
+                "start": 720,
+                "duration": 60,
+                "category": "daily",
+                "tagId": "rest",
+                "done": false
+              },
+              {
+                "id": "c3",
+                "taskId": "implement",
+                "title": "实现核心功能",
+                "start": 840,
+                "duration": 120,
+                "category": "product",
+                "tagId": "work",
+                "done": false
+              },
+              {
+                "id": "c4",
+                "taskId": "read",
+                "title": "阅读与笔记",
+                "start": 1170,
+                "duration": 60,
+                "category": "growth",
+                "tagId": "learn",
+                "done": false
+              },
+              {
+                "id": "c5",
+                "taskId": "sport",
+                "title": "运动与拉伸",
+                "start": 1290,
+                "duration": 60,
+                "category": "daily",
+                "tagId": "life",
+                "done": false
+              }
+            ]
+          },
+          {
+            "templateId": "review-day",
+            "templateName": "复盘日",
+            "blocks": [
+              {
+                "id": "r0",
+                "taskId": "morning",
+                "title": "晨间阅读",
+                "start": 510,
+                "duration": 30,
+                "category": "growth",
+                "tagId": "learn",
+                "done": false
+              },
+              {
+                "id": "r1",
+                "taskId": "feedback",
+                "title": "整理用户反馈",
+                "start": 570,
+                "duration": 60,
+                "category": "product",
+                "tagId": "work",
+                "done": false
+              },
+              {
+                "id": "r2",
+                "taskId": "lunch",
+                "title": "午休与散步",
+                "start": 720,
+                "duration": 60,
+                "category": "daily",
+                "tagId": "rest",
+                "done": false
+              },
+              {
+                "id": "r3",
+                "taskId": "review",
+                "title": "回顾迭代成果",
+                "start": 840,
+                "duration": 60,
+                "category": "product",
+                "tagId": "work",
+                "done": false
+              },
+              {
+                "id": "r4",
+                "taskId": "week-review",
+                "title": "每周复盘",
+                "start": 960,
+                "duration": 30,
+                "category": "growth",
+                "tagId": "learn",
+                "done": false
+              },
+              {
+                "id": "r5",
+                "kind": "tag-slot",
+                "tagId": "learn",
+                "title": "待选任务",
+                "start": 1170,
+                "duration": 90,
+                "done": false
+              }
+            ]
+          },
+          {
+            "templateId": "weekend",
+            "templateName": "轻量周末",
+            "blocks": [
+              {
+                "id": "w0",
+                "kind": "tag-slot",
+                "tagId": "creative",
+                "title": "待选任务",
+                "start": 600,
+                "duration": 90,
+                "done": false
+              },
+              {
+                "id": "w1",
+                "taskId": "lunch",
+                "title": "午休与散步",
+                "start": 750,
+                "duration": 60,
+                "category": "daily",
+                "tagId": "rest",
+                "done": false
+              },
+              {
+                "id": "w2",
+                "taskId": "chores",
+                "title": "整理生活杂事",
+                "start": 900,
+                "duration": 60,
+                "category": "daily",
+                "tagId": "life",
+                "done": false
+              },
+              {
+                "id": "w3",
+                "taskId": "sport",
+                "title": "运动与拉伸",
+                "start": 1020,
+                "duration": 60,
+                "category": "daily",
+                "tagId": "life",
+                "done": false
+              }
+            ]
+          },
+          {
+            "templateId": "sunday",
+            "templateName": "周日充电",
+            "blocks": [
+              {
+                "id": "s0",
+                "taskId": "read",
+                "title": "阅读与笔记",
+                "start": 600,
+                "duration": 60,
+                "category": "growth",
+                "tagId": "learn",
+                "done": false
+              },
+              {
+                "id": "s1",
+                "taskId": "lunch",
+                "title": "午休与散步",
+                "start": 750,
+                "duration": 60,
+                "category": "daily",
+                "tagId": "rest",
+                "done": false
+              },
+              {
+                "id": "s2",
+                "taskId": "sport",
+                "title": "运动与拉伸",
+                "start": 960,
+                "duration": 60,
+                "category": "daily",
+                "tagId": "life",
+                "done": false
+              },
+              {
+                "id": "s3",
+                "taskId": "next-week",
+                "title": "规划下一周",
+                "start": 1200,
+                "duration": 30,
+                "category": "daily",
+                "tagId": "life",
+                "done": false
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "id": "light-week",
+        "name": "轻量充电周",
+        "description": "保留重点，缩减安排，为临时变化预留空间。",
+        "notes": "适合出行、过渡期或想慢下来的一周。",
+        "days": [
+          {
+            "templateId": "review-day",
+            "templateName": "复盘日",
+            "blocks": [
+              {
+                "id": "r0",
+                "taskId": "morning",
+                "title": "晨间阅读",
+                "start": 510,
+                "duration": 30,
+                "category": "growth",
+                "tagId": "learn",
+                "done": false
+              },
+              {
+                "id": "r1",
+                "taskId": "feedback",
+                "title": "整理用户反馈",
+                "start": 570,
+                "duration": 60,
+                "category": "product",
+                "tagId": "work",
+                "done": false
+              },
+              {
+                "id": "r2",
+                "taskId": "lunch",
+                "title": "午休与散步",
+                "start": 720,
+                "duration": 60,
+                "category": "daily",
+                "tagId": "rest",
+                "done": false
+              },
+              {
+                "id": "r3",
+                "taskId": "review",
+                "title": "回顾迭代成果",
+                "start": 840,
+                "duration": 60,
+                "category": "product",
+                "tagId": "work",
+                "done": false
+              },
+              {
+                "id": "r4",
+                "taskId": "week-review",
+                "title": "每周复盘",
+                "start": 960,
+                "duration": 30,
+                "category": "growth",
+                "tagId": "learn",
+                "done": false
+              },
+              {
+                "id": "r5",
+                "kind": "tag-slot",
+                "tagId": "learn",
+                "title": "待选任务",
+                "start": 1170,
+                "duration": 90,
+                "done": false
+              }
+            ]
+          },
+          {
+            "templateId": "creative-day",
+            "templateName": "创作日",
+            "blocks": [
+              {
+                "id": "c0",
+                "taskId": "morning",
+                "title": "晨间阅读",
+                "start": 510,
+                "duration": 30,
+                "category": "growth",
+                "tagId": "learn",
+                "done": false
+              },
+              {
+                "id": "c1",
+                "kind": "tag-slot",
+                "tagId": "creative",
+                "title": "待选任务",
+                "start": 570,
+                "duration": 90,
+                "done": false
+              },
+              {
+                "id": "c2",
+                "taskId": "lunch",
+                "title": "午休与散步",
+                "start": 720,
+                "duration": 60,
+                "category": "daily",
+                "tagId": "rest",
+                "done": false
+              },
+              {
+                "id": "c3",
+                "taskId": "implement",
+                "title": "实现核心功能",
+                "start": 840,
+                "duration": 120,
+                "category": "product",
+                "tagId": "work",
+                "done": false
+              },
+              {
+                "id": "c4",
+                "taskId": "read",
+                "title": "阅读与笔记",
+                "start": 1170,
+                "duration": 60,
+                "category": "growth",
+                "tagId": "learn",
+                "done": false
+              },
+              {
+                "id": "c5",
+                "taskId": "sport",
+                "title": "运动与拉伸",
+                "start": 1290,
+                "duration": 60,
+                "category": "daily",
+                "tagId": "life",
+                "done": false
+              }
+            ]
+          },
+          {
+            "templateId": "review-day",
+            "templateName": "复盘日",
+            "blocks": [
+              {
+                "id": "r0",
+                "taskId": "morning",
+                "title": "晨间阅读",
+                "start": 510,
+                "duration": 30,
+                "category": "growth",
+                "tagId": "learn",
+                "done": false
+              },
+              {
+                "id": "r1",
+                "taskId": "feedback",
+                "title": "整理用户反馈",
+                "start": 570,
+                "duration": 60,
+                "category": "product",
+                "tagId": "work",
+                "done": false
+              },
+              {
+                "id": "r2",
+                "taskId": "lunch",
+                "title": "午休与散步",
+                "start": 720,
+                "duration": 60,
+                "category": "daily",
+                "tagId": "rest",
+                "done": false
+              },
+              {
+                "id": "r3",
+                "taskId": "review",
+                "title": "回顾迭代成果",
+                "start": 840,
+                "duration": 60,
+                "category": "product",
+                "tagId": "work",
+                "done": false
+              },
+              {
+                "id": "r4",
+                "taskId": "week-review",
+                "title": "每周复盘",
+                "start": 960,
+                "duration": 30,
+                "category": "growth",
+                "tagId": "learn",
+                "done": false
+              },
+              {
+                "id": "r5",
+                "kind": "tag-slot",
+                "tagId": "learn",
+                "title": "待选任务",
+                "start": 1170,
+                "duration": 90,
+                "done": false
+              }
+            ]
+          },
+          {
+            "templateId": "creative-day",
+            "templateName": "创作日",
+            "blocks": [
+              {
+                "id": "c0",
+                "taskId": "morning",
+                "title": "晨间阅读",
+                "start": 510,
+                "duration": 30,
+                "category": "growth",
+                "tagId": "learn",
+                "done": false
+              },
+              {
+                "id": "c1",
+                "kind": "tag-slot",
+                "tagId": "creative",
+                "title": "待选任务",
+                "start": 570,
+                "duration": 90,
+                "done": false
+              },
+              {
+                "id": "c2",
+                "taskId": "lunch",
+                "title": "午休与散步",
+                "start": 720,
+                "duration": 60,
+                "category": "daily",
+                "tagId": "rest",
+                "done": false
+              },
+              {
+                "id": "c3",
+                "taskId": "implement",
+                "title": "实现核心功能",
+                "start": 840,
+                "duration": 120,
+                "category": "product",
+                "tagId": "work",
+                "done": false
+              },
+              {
+                "id": "c4",
+                "taskId": "read",
+                "title": "阅读与笔记",
+                "start": 1170,
+                "duration": 60,
+                "category": "growth",
+                "tagId": "learn",
+                "done": false
+              },
+              {
+                "id": "c5",
+                "taskId": "sport",
+                "title": "运动与拉伸",
+                "start": 1290,
+                "duration": 60,
+                "category": "daily",
+                "tagId": "life",
+                "done": false
+              }
+            ]
+          },
+          {
+            "templateId": "review-day",
+            "templateName": "复盘日",
+            "blocks": [
+              {
+                "id": "r0",
+                "taskId": "morning",
+                "title": "晨间阅读",
+                "start": 510,
+                "duration": 30,
+                "category": "growth",
+                "tagId": "learn",
+                "done": false
+              },
+              {
+                "id": "r1",
+                "taskId": "feedback",
+                "title": "整理用户反馈",
+                "start": 570,
+                "duration": 60,
+                "category": "product",
+                "tagId": "work",
+                "done": false
+              },
+              {
+                "id": "r2",
+                "taskId": "lunch",
+                "title": "午休与散步",
+                "start": 720,
+                "duration": 60,
+                "category": "daily",
+                "tagId": "rest",
+                "done": false
+              },
+              {
+                "id": "r3",
+                "taskId": "review",
+                "title": "回顾迭代成果",
+                "start": 840,
+                "duration": 60,
+                "category": "product",
+                "tagId": "work",
+                "done": false
+              },
+              {
+                "id": "r4",
+                "taskId": "week-review",
+                "title": "每周复盘",
+                "start": 960,
+                "duration": 30,
+                "category": "growth",
+                "tagId": "learn",
+                "done": false
+              },
+              {
+                "id": "r5",
+                "kind": "tag-slot",
+                "tagId": "learn",
+                "title": "待选任务",
+                "start": 1170,
+                "duration": 90,
+                "done": false
+              }
+            ]
+          },
+          {
+            "templateId": "sunday",
+            "templateName": "周日充电",
+            "blocks": [
+              {
+                "id": "s0",
+                "taskId": "read",
+                "title": "阅读与笔记",
+                "start": 600,
+                "duration": 60,
+                "category": "growth",
+                "tagId": "learn",
+                "done": false
+              },
+              {
+                "id": "s1",
+                "taskId": "lunch",
+                "title": "午休与散步",
+                "start": 750,
+                "duration": 60,
+                "category": "daily",
+                "tagId": "rest",
+                "done": false
+              },
+              {
+                "id": "s2",
+                "taskId": "sport",
+                "title": "运动与拉伸",
+                "start": 960,
+                "duration": 60,
+                "category": "daily",
+                "tagId": "life",
+                "done": false
+              },
+              {
+                "id": "s3",
+                "taskId": "next-week",
+                "title": "规划下一周",
+                "start": 1200,
+                "duration": 30,
+                "category": "daily",
+                "tagId": "life",
+                "done": false
+              }
+            ]
+          },
+          {
+            "templateId": "sunday",
+            "templateName": "周日充电",
+            "blocks": [
+              {
+                "id": "s0",
+                "taskId": "read",
+                "title": "阅读与笔记",
+                "start": 600,
+                "duration": 60,
+                "category": "growth",
+                "tagId": "learn",
+                "done": false
+              },
+              {
+                "id": "s1",
+                "taskId": "lunch",
+                "title": "午休与散步",
+                "start": 750,
+                "duration": 60,
+                "category": "daily",
+                "tagId": "rest",
+                "done": false
+              },
+              {
+                "id": "s2",
+                "taskId": "sport",
+                "title": "运动与拉伸",
+                "start": 960,
+                "duration": 60,
+                "category": "daily",
+                "tagId": "life",
+                "done": false
+              },
+              {
+                "id": "s3",
+                "taskId": "next-week",
+                "title": "规划下一周",
+                "start": 1200,
+                "duration": 30,
+                "category": "daily",
+                "tagId": "life",
+                "done": false
+              }
+            ]
+          }
+        ]
+      }
+    ],
+    "cycle": {
+      "enabled": true,
+      "startDate": "2026-11-16",
+      "endDate": null,
+      "sourceWeekTemplateId": "balanced-week",
+      "days": [
+        {
+          "templateId": "focus",
+          "templateName": "专注工作日",
+          "blocks": [
+            {
+              "id": "f0",
+              "taskId": "morning",
+              "title": "晨间阅读",
+              "start": 510,
+              "duration": 30,
+              "category": "growth",
+              "tagId": "learn",
+              "done": false
+            },
+            {
+              "id": "f1",
+              "taskId": "prototype",
+              "title": "完善产品原型",
+              "start": 570,
+              "duration": 90,
+              "category": "product",
+              "tagId": "work",
+              "done": false
+            },
+            {
+              "id": "f2",
+              "taskId": "lunch",
+              "title": "午休与散步",
+              "start": 720,
+              "duration": 60,
+              "category": "daily",
+              "tagId": "rest",
+              "done": false
+            },
+            {
+              "id": "f3",
+              "taskId": "implement",
+              "title": "实现核心功能",
+              "start": 840,
+              "duration": 120,
+              "category": "product",
+              "tagId": "work",
+              "done": false
+            },
+            {
+              "id": "f4",
+              "kind": "tag-slot",
+              "tagId": "learn",
+              "title": "待选任务",
+              "start": 1170,
+              "duration": 90,
+              "done": false
+            },
+            {
+              "id": "f5",
+              "taskId": "sport",
+              "title": "运动与拉伸",
+              "start": 1290,
+              "duration": 60,
+              "category": "daily",
+              "tagId": "life",
+              "done": false
+            }
+          ]
+        },
+        {
+          "templateId": "creative-day",
+          "templateName": "创作日",
+          "blocks": [
+            {
+              "id": "c0",
+              "taskId": "morning",
+              "title": "晨间阅读",
+              "start": 510,
+              "duration": 30,
+              "category": "growth",
+              "tagId": "learn",
+              "done": false
+            },
+            {
+              "id": "c1",
+              "kind": "tag-slot",
+              "tagId": "creative",
+              "title": "待选任务",
+              "start": 570,
+              "duration": 90,
+              "done": false
+            },
+            {
+              "id": "c2",
+              "taskId": "lunch",
+              "title": "午休与散步",
+              "start": 720,
+              "duration": 60,
+              "category": "daily",
+              "tagId": "rest",
+              "done": false
+            },
+            {
+              "id": "c3",
+              "taskId": "implement",
+              "title": "实现核心功能",
+              "start": 840,
+              "duration": 120,
+              "category": "product",
+              "tagId": "work",
+              "done": false
+            },
+            {
+              "id": "c4",
+              "taskId": "read",
+              "title": "阅读与笔记",
+              "start": 1170,
+              "duration": 60,
+              "category": "growth",
+              "tagId": "learn",
+              "done": false
+            },
+            {
+              "id": "c5",
+              "taskId": "sport",
+              "title": "运动与拉伸",
+              "start": 1290,
+              "duration": 60,
+              "category": "daily",
+              "tagId": "life",
+              "done": false
+            }
+          ]
+        },
+        {
+          "templateId": "focus",
+          "templateName": "专注工作日",
+          "blocks": [
+            {
+              "id": "f0",
+              "taskId": "morning",
+              "title": "晨间阅读",
+              "start": 510,
+              "duration": 30,
+              "category": "growth",
+              "tagId": "learn",
+              "done": false
+            },
+            {
+              "id": "f1",
+              "taskId": "prototype",
+              "title": "完善产品原型",
+              "start": 570,
+              "duration": 90,
+              "category": "product",
+              "tagId": "work",
+              "done": false
+            },
+            {
+              "id": "f2",
+              "taskId": "lunch",
+              "title": "午休与散步",
+              "start": 720,
+              "duration": 60,
+              "category": "daily",
+              "tagId": "rest",
+              "done": false
+            },
+            {
+              "id": "f3",
+              "taskId": "implement",
+              "title": "实现核心功能",
+              "start": 840,
+              "duration": 120,
+              "category": "product",
+              "tagId": "work",
+              "done": false
+            },
+            {
+              "id": "f4",
+              "kind": "tag-slot",
+              "tagId": "learn",
+              "title": "待选任务",
+              "start": 1170,
+              "duration": 90,
+              "done": false
+            },
+            {
+              "id": "f5",
+              "taskId": "sport",
+              "title": "运动与拉伸",
+              "start": 1290,
+              "duration": 60,
+              "category": "daily",
+              "tagId": "life",
+              "done": false
+            }
+          ]
+        },
+        {
+          "templateId": "creative-day",
+          "templateName": "创作日",
+          "blocks": [
+            {
+              "id": "c0",
+              "taskId": "morning",
+              "title": "晨间阅读",
+              "start": 510,
+              "duration": 30,
+              "category": "growth",
+              "tagId": "learn",
+              "done": false
+            },
+            {
+              "id": "c1",
+              "kind": "tag-slot",
+              "tagId": "creative",
+              "title": "待选任务",
+              "start": 570,
+              "duration": 90,
+              "done": false
+            },
+            {
+              "id": "c2",
+              "taskId": "lunch",
+              "title": "午休与散步",
+              "start": 720,
+              "duration": 60,
+              "category": "daily",
+              "tagId": "rest",
+              "done": false
+            },
+            {
+              "id": "c3",
+              "taskId": "implement",
+              "title": "实现核心功能",
+              "start": 840,
+              "duration": 120,
+              "category": "product",
+              "tagId": "work",
+              "done": false
+            },
+            {
+              "id": "c4",
+              "taskId": "read",
+              "title": "阅读与笔记",
+              "start": 1170,
+              "duration": 60,
+              "category": "growth",
+              "tagId": "learn",
+              "done": false
+            },
+            {
+              "id": "c5",
+              "taskId": "sport",
+              "title": "运动与拉伸",
+              "start": 1290,
+              "duration": 60,
+              "category": "daily",
+              "tagId": "life",
+              "done": false
+            }
+          ]
+        },
+        {
+          "templateId": "review-day",
+          "templateName": "复盘日",
+          "blocks": [
+            {
+              "id": "r0",
+              "taskId": "morning",
+              "title": "晨间阅读",
+              "start": 510,
+              "duration": 30,
+              "category": "growth",
+              "tagId": "learn",
+              "done": false
+            },
+            {
+              "id": "r1",
+              "taskId": "feedback",
+              "title": "整理用户反馈",
+              "start": 570,
+              "duration": 60,
+              "category": "product",
+              "tagId": "work",
+              "done": false
+            },
+            {
+              "id": "r2",
+              "taskId": "lunch",
+              "title": "午休与散步",
+              "start": 720,
+              "duration": 60,
+              "category": "daily",
+              "tagId": "rest",
+              "done": false
+            },
+            {
+              "id": "r3",
+              "taskId": "review",
+              "title": "回顾迭代成果",
+              "start": 840,
+              "duration": 60,
+              "category": "product",
+              "tagId": "work",
+              "done": false
+            },
+            {
+              "id": "r4",
+              "taskId": "week-review",
+              "title": "每周复盘",
+              "start": 960,
+              "duration": 30,
+              "category": "growth",
+              "tagId": "learn",
+              "done": false
+            },
+            {
+              "id": "r5",
+              "kind": "tag-slot",
+              "tagId": "learn",
+              "title": "待选任务",
+              "start": 1170,
+              "duration": 90,
+              "done": false
+            }
+          ]
+        },
+        {
+          "templateId": "weekend",
+          "templateName": "轻量周末",
+          "blocks": [
+            {
+              "id": "w0",
+              "kind": "tag-slot",
+              "tagId": "creative",
+              "title": "待选任务",
+              "start": 600,
+              "duration": 90,
+              "done": false
+            },
+            {
+              "id": "w1",
+              "taskId": "lunch",
+              "title": "午休与散步",
+              "start": 750,
+              "duration": 60,
+              "category": "daily",
+              "tagId": "rest",
+              "done": false
+            },
+            {
+              "id": "w2",
+              "taskId": "chores",
+              "title": "整理生活杂事",
+              "start": 900,
+              "duration": 60,
+              "category": "daily",
+              "tagId": "life",
+              "done": false
+            },
+            {
+              "id": "w3",
+              "taskId": "sport",
+              "title": "运动与拉伸",
+              "start": 1020,
+              "duration": 60,
+              "category": "daily",
+              "tagId": "life",
+              "done": false
+            }
+          ]
+        },
+        {
+          "templateId": "sunday",
+          "templateName": "周日充电",
+          "blocks": [
+            {
+              "id": "s0",
+              "taskId": "read",
+              "title": "阅读与笔记",
+              "start": 600,
+              "duration": 60,
+              "category": "growth",
+              "tagId": "learn",
+              "done": false
+            },
+            {
+              "id": "s1",
+              "taskId": "lunch",
+              "title": "午休与散步",
+              "start": 750,
+              "duration": 60,
+              "category": "daily",
+              "tagId": "rest",
+              "done": false
+            },
+            {
+              "id": "s2",
+              "taskId": "sport",
+              "title": "运动与拉伸",
+              "start": 960,
+              "duration": 60,
+              "category": "daily",
+              "tagId": "life",
+              "done": false
+            },
+            {
+              "id": "s3",
+              "taskId": "next-week",
+              "title": "规划下一周",
+              "start": 1200,
+              "duration": 30,
+              "category": "daily",
+              "tagId": "life",
+              "done": false
+            }
+          ]
+        }
+      ]
+    },
+    "tags": [
+      {
+        "id": "work",
+        "name": "工作",
+        "color": "#6F987E"
+      },
+      {
+        "id": "learn",
+        "name": "学习",
+        "color": "#9992C0"
+      },
+      {
+        "id": "creative",
+        "name": "创作",
+        "color": "#718DB5"
+      },
+      {
+        "id": "life",
+        "name": "生活",
+        "color": "#B29C70",
+        "countTowardsCompletion": false
+      },
+      {
+        "id": "rest",
+        "name": "休息",
+        "color": "#C49A68",
+        "countTowardsCompletion": false
+      }
+    ],
+    "tagDefaultsVersion": 1,
+    "tracking": {
+      "sessions": [
+        {
+          "id": "actual-0-0",
+          "planDate": "2026-11-16",
+          "blockId": "f0",
+          "title": "晨间阅读",
+          "category": "growth",
+          "tagId": "learn",
+          "planBinding": "explicit",
+          "startedAt": 1794789300000,
+          "endedAt": 1794790800000
+        },
+        {
+          "id": "actual-0-1",
+          "planDate": "2026-11-16",
+          "blockId": "f1",
+          "title": "完善产品原型",
+          "category": "product",
+          "tagId": "work",
+          "planBinding": "explicit",
+          "startedAt": 1794793500000,
+          "endedAt": 1794798000000
+        },
+        {
+          "id": "actual-0-2",
+          "planDate": "2026-11-16",
+          "blockId": "f2",
+          "title": "午休与散步",
+          "category": "daily",
+          "tagId": "rest",
+          "planBinding": "explicit",
+          "startedAt": 1794802200000,
+          "endedAt": 1794804900000
+        },
+        {
+          "id": "actual-0-3",
+          "planDate": "2026-11-16",
+          "blockId": "f3",
+          "title": "实现核心功能",
+          "category": "product",
+          "tagId": "work",
+          "planBinding": "explicit",
+          "startedAt": 1794809700000,
+          "endedAt": 1794817800000
+        },
+        {
+          "id": "actual-0-4",
+          "planDate": "2026-11-16",
+          "blockId": "f4",
+          "title": "练习一个新技能",
+          "category": "growth",
+          "tagId": "learn",
+          "planBinding": "explicit",
+          "startedAt": 1794828600000,
+          "endedAt": 1794832200000
+        },
+        {
+          "id": "actual-0-5",
+          "planDate": "2026-11-16",
+          "blockId": "f5",
+          "title": "运动与拉伸",
+          "category": "daily",
+          "tagId": "life",
+          "planBinding": "explicit",
+          "startedAt": 1794836400000,
+          "endedAt": 1794838800000
+        },
+        {
+          "id": "actual-1-0",
+          "planDate": "2026-11-17",
+          "blockId": "c0",
+          "title": "晨间阅读",
+          "category": "growth",
+          "tagId": "learn",
+          "planBinding": "explicit",
+          "startedAt": 1794875700000,
+          "endedAt": 1794877200000
+        },
+        {
+          "id": "actual-1-1",
+          "planDate": "2026-11-17",
+          "blockId": "c1",
+          "title": "打磨个人作品",
+          "category": "studio",
+          "tagId": "creative",
+          "planBinding": "explicit",
+          "startedAt": 1794879900000,
+          "endedAt": 1794884400000
+        },
+        {
+          "id": "actual-1-2",
+          "planDate": "2026-11-17",
+          "blockId": "c2",
+          "title": "午休与散步",
+          "category": "daily",
+          "tagId": "rest",
+          "planBinding": "explicit",
+          "startedAt": 1794888600000,
+          "endedAt": 1794891300000
+        },
+        {
+          "id": "actual-1-3",
+          "planDate": "2026-11-17",
+          "blockId": "c3",
+          "title": "实现核心功能",
+          "category": "product",
+          "tagId": "work",
+          "planBinding": "explicit",
+          "startedAt": 1794896100000,
+          "endedAt": 1794904200000
+        },
+        {
+          "id": "actual-1-4",
+          "planDate": "2026-11-17",
+          "blockId": "c4",
+          "title": "阅读与笔记",
+          "category": "growth",
+          "tagId": "learn",
+          "planBinding": "explicit",
+          "startedAt": 1794915000000,
+          "endedAt": 1794918600000
+        },
+        {
+          "id": "actual-1-5",
+          "planDate": "2026-11-17",
+          "blockId": "c5",
+          "title": "运动与拉伸",
+          "category": "daily",
+          "tagId": "life",
+          "planBinding": "explicit",
+          "startedAt": 1794922800000,
+          "endedAt": 1794925200000
+        },
+        {
+          "id": "actual-2-0",
+          "planDate": "2026-11-18",
+          "blockId": "f0",
+          "title": "晨间阅读",
+          "category": "growth",
+          "tagId": "learn",
+          "planBinding": "explicit",
+          "startedAt": 1794962100000,
+          "endedAt": 1794963600000
+        },
+        {
+          "id": "actual-2-1",
+          "planDate": "2026-11-18",
+          "blockId": "f1",
+          "title": "完善产品原型",
+          "category": "product",
+          "tagId": "work",
+          "planBinding": "explicit",
+          "startedAt": 1794966300000,
+          "endedAt": 1794970800000
+        },
+        {
+          "id": "actual-2-2",
+          "planDate": "2026-11-18",
+          "blockId": "f2",
+          "title": "午休与散步",
+          "category": "daily",
+          "tagId": "rest",
+          "planBinding": "explicit",
+          "startedAt": 1794975000000,
+          "endedAt": 1794977700000
+        },
+        {
+          "id": "actual-2-3",
+          "planDate": "2026-11-18",
+          "blockId": "f3",
+          "title": "实现核心功能",
+          "category": "product",
+          "tagId": "work",
+          "planBinding": "explicit",
+          "startedAt": 1794982500000,
+          "endedAt": 1794990600000
+        },
+        {
+          "id": "actual-2-4",
+          "planDate": "2026-11-18",
+          "blockId": "f4",
+          "title": "练习一个新技能",
+          "category": "growth",
+          "tagId": "learn",
+          "planBinding": "explicit",
+          "startedAt": 1795001400000,
+          "endedAt": 1795005000000
+        },
+        {
+          "id": "actual-2-5",
+          "planDate": "2026-11-18",
+          "blockId": "f5",
+          "title": "运动与拉伸",
+          "category": "daily",
+          "tagId": "life",
+          "planBinding": "explicit",
+          "startedAt": 1795009200000,
+          "endedAt": 1795011600000
+        },
+        {
+          "id": "actual-3-0",
+          "planDate": "2026-11-19",
+          "blockId": "c0",
+          "title": "晨间阅读",
+          "category": "growth",
+          "tagId": "learn",
+          "planBinding": "explicit",
+          "startedAt": 1795048500000,
+          "endedAt": 1795050000000
+        },
+        {
+          "id": "actual-3-1",
+          "planDate": "2026-11-19",
+          "blockId": "c1",
+          "title": "打磨个人作品",
+          "category": "studio",
+          "tagId": "creative",
+          "planBinding": "explicit",
+          "startedAt": 1795052700000,
+          "endedAt": 1795057200000
+        },
+        {
+          "id": "actual-3-2",
+          "planDate": "2026-11-19",
+          "blockId": "c2",
+          "title": "午休与散步",
+          "category": "daily",
+          "tagId": "rest",
+          "planBinding": "explicit",
+          "startedAt": 1795061400000,
+          "endedAt": 1795064100000
+        },
+        {
+          "id": "actual-3-3",
+          "planDate": "2026-11-19",
+          "blockId": "c3",
+          "title": "实现核心功能",
+          "category": "product",
+          "tagId": "work",
+          "planBinding": "explicit",
+          "startedAt": 1795068900000,
+          "endedAt": 1795077000000
+        },
+        {
+          "id": "actual-3-5",
+          "planDate": "2026-11-19",
+          "blockId": "c5",
+          "title": "运动与拉伸",
+          "category": "daily",
+          "tagId": "life",
+          "planBinding": "explicit",
+          "startedAt": 1795095600000,
+          "endedAt": 1795098000000
+        }
+      ],
+      "timer": null
+    }
+  }
+}
