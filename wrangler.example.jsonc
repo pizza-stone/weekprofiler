@@ -1,0 +1,18 @@
+{
+  "$schema": "node_modules/wrangler/config-schema.json",
+  "name": "weekprofiler",
+  "main": "dist/cloudflare/index.js",
+  "compatibility_date": "2026-11-16",
+  "workers_dev": true,
+  "preview_urls": false,
+  "keep_vars": true,
+  "observability": { "enabled": false },
+  "d1_databases": [
+    {
+      "binding": "DB",
+      "database_name": "weekprofiler",
+      "database_id": "",
+      "migrations_dir": "drizzle"
+    }
+  ]
+}

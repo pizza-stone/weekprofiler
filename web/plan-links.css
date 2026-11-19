@@ -1,0 +1,7 @@
+/* One SVG shares the canvas coordinates, so scrolling never detaches a connection. */
+[data-plan-links]{position:relative;isolation:isolate}
+[data-plan-links]>.plan-links-layer{position:absolute;inset:0;width:100%;height:100%;z-index:1;overflow:hidden;pointer-events:none}
+.plan-link-path{fill:none;stroke:#688d77;stroke-width:1.5;stroke-opacity:.42;stroke-linecap:round;pointer-events:none;transition:stroke-opacity .12s,stroke-width .12s}
+.plan-link-path.is-active{stroke:#345f49;stroke-width:2.5;stroke-opacity:1}
+[data-plan-links] [data-link-role].plan-link-active{outline:2px solid #527d63;outline-offset:-1px;opacity:1;box-shadow:0 0 0 2px #ffffffb3}
+@media(prefers-reduced-motion:reduce){.plan-link-path{transition:none}}

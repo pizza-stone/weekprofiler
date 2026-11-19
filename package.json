@@ -1,0 +1,25 @@
+{
+  "name": "weekprofiler",
+  "version": "3.2.0",
+  "description": "周谱 · A weekly planner with reusable templates, time tracking and optional personal cloud sync.",
+  "license": "MIT",
+  "engines": { "node": ">=24" },
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "build": "node build.mjs",
+    "portable": "node portable.mjs",
+    "predev": "node build.mjs",
+    "dev": "node preview.mjs",
+    "prestart": "node portable.mjs",
+    "start": "node local-ai-server.mjs",
+    "test": "node --test tests/*.test.mjs",
+    "predev:cloud": "node build.mjs",
+    "dev:cloud": "node cloud-preview.mjs",
+    "cloud:login": "node scripts/cloudflare.mjs login",
+    "cloud:deploy": "node build.mjs && node scripts/cloudflare.mjs deploy"
+  },
+  "devDependencies": {
+    "wrangler": "4.162.0"
+  }
+}

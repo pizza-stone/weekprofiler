@@ -1,0 +1,45 @@
+# Generated builds and local previews
+/dist/
+/output/
+/outputs/
+/release/
+/weekprofiler-preview.html
+/dayloom-preview.html
+node_modules/
+coverage/
+
+# Local deployment, databases and authentication
+/wrangler.jsonc
+/.wrangler/
+/.openai/
+/.sites-runtime/
+/.tmp/
+.env
+.env.*
+.dev.vars
+.dev.vars.*
+*.sqlite
+*.sqlite-*
+*.sqlite3
+*.sqlite3-*
+*.db
+*.db-*
+*.pem
+*.key
+*.p12
+*.log
+
+# User exports
+weekprofiler-backup-*.json
+weekprofiler-conflict-*.json
+dayloom-backup-*.json
+*.ics
+
+# Editor and operating system files
+.DS_Store
+Thumbs.db
+Desktop.ini
+*.swp
+*.swo
+.idea/
+.vscode/

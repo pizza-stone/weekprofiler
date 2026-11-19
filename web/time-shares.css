@@ -1,0 +1,45 @@
+/* The mix is compact by default in weekly headers; every task remains available on expand. */
+.time-shares-wrap{display:grid;gap:10px;min-width:0;margin:0 0 16px}
+.time-shares-wrap.is-compare{grid-template-columns:repeat(2,minmax(0,1fr))}
+.time-shares{min-width:0;border:1px solid var(--line,#e4eade);border-radius:10px;background:#fafcf8;color:#52664c}
+.time-shares>summary{padding:11px 13px;cursor:pointer;list-style:none;user-select:none}
+.time-shares>summary::-webkit-details-marker{display:none}
+.time-shares>summary:focus-visible{outline:2px solid #416b57;outline-offset:2px;border-radius:9px}
+.time-shares-heading{display:flex;align-items:center;gap:6px;font-size:11px;font-weight:550;line-height:1.5;min-width:0}
+.time-shares-heading>span{flex:1;min-width:0}
+.time-shares-heading>small{font-size:10px;font-weight:400;white-space:nowrap;color:#72846b}
+.time-shares-heading::after{content:'⌄';flex:none;font-size:13px;line-height:1;transition:transform .15s}
+.time-shares[open] .time-shares-heading::after{transform:rotate(180deg)}
+.time-shares-bar{display:flex;gap:2px;height:6px;overflow:hidden;border-radius:5px;background:#e8eee2;margin-top:8px}
+.time-shares-bar>span{min-width:0;height:100%}
+.time-shares-detail{padding:0 13px 10px;min-width:0;max-height:290px;overflow:auto;overscroll-behavior:contain;scrollbar-width:thin}
+.time-shares-detail ol{list-style:none;margin:0;padding:0;display:grid;gap:9px}
+.time-shares-section+.time-shares-section{margin-top:14px;padding-top:11px;border-top:1px solid var(--line,#e4eade)}
+.time-shares-section>h3{margin:0 0 9px;color:#78896e;font-size:10px;font-weight:550;line-height:1.5}
+.time-shares-detail li{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:4px 10px;align-items:center;min-width:0;font-size:11px;line-height:1.5}
+.time-share-name{display:flex;align-items:center;gap:6px;min-width:0}
+.time-share-name>i{display:block;width:6px;height:6px;flex:none;border-radius:50%}
+.time-share-name>span{min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.time-share-name>.time-share-mixed{flex:none;font-size:9px;font-weight:400;color:#84917e}
+.time-share-value{display:flex;align-items:center;justify-content:flex-end;gap:8px;font-variant-numeric:tabular-nums;white-space:nowrap}
+.time-share-value>small{font-size:10px;color:#819077}
+.time-share-value>strong{min-width:39px;text-align:right;font-size:11px;font-weight:550;color:#4d6946}
+.time-share-track{grid-column:1/-1;display:block;height:3px;overflow:hidden;background:#e9eee4;border-radius:3px}
+.time-share-track>span{display:block;height:100%;border-radius:3px}
+.time-shares-note,.time-shares-empty{margin:9px 0 0;color:#85947b;font-size:10px;line-height:1.5;overflow-wrap:anywhere}
+.time-shares-wrap.compact{margin:10px 0 0;gap:6px}
+.time-shares.compact{position:relative;border-radius:6px;background:#f8faf5}
+.time-shares.compact>summary{padding:7px}
+.time-shares.compact .time-shares-heading{font-size:9px;flex-wrap:wrap;gap:2px 4px}
+.time-shares.compact .time-shares-heading>small{font-size:9px;order:2;width:100%}
+.time-shares.compact .time-shares-heading::after{font-size:11px}
+.time-shares.compact .time-shares-bar{height:4px;margin-top:5px;gap:1px}
+.time-shares.compact .time-shares-detail{position:absolute;left:0;top:calc(100% + 5px);z-index:8;width:230px;max-width:70vw;max-height:min(260px,36dvh);padding:12px;border:1px solid #cedbc7;border-radius:9px;background:#fff;box-shadow:0 7px 24px #34462c26}
+.week-day-head:last-child .time-shares.compact .time-shares-detail{left:auto;right:0}
+.time-shares.compact .time-shares-detail ol{gap:8px}
+.time-shares.compact .time-shares-detail li{grid-template-columns:minmax(0,1fr);gap:2px;font-size:10px}
+.time-shares.compact .time-share-value{justify-content:space-between;gap:3px}
+.time-shares.compact .time-share-value>small,.time-shares.compact .time-share-value>strong{font-size:9px;min-width:0}
+.time-shares.compact .time-shares-note,.time-shares.compact .time-shares-empty{font-size:9px}
+@media(max-width:720px){.time-shares-detail{overscroll-behavior-y:auto}}
+@media(max-width:540px){.time-shares-wrap:not(.compact).is-compare{grid-template-columns:minmax(0,1fr)}.time-shares-detail li{gap:4px 6px}.time-share-value{gap:5px}}

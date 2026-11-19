@@ -1,0 +1,109 @@
+.weekly-panel{overflow:hidden}.week-view-summary{padding:18px 22px 15px;border-bottom:1px solid var(--line);display:flex;align-items:center;justify-content:space-between;gap:18px;flex-wrap:wrap}.week-overview-metrics{font-size:11px;color:#899285;display:flex;gap:18px;align-items:center;flex-wrap:wrap}.week-overview-metrics b{color:#52664c;font-weight:550;margin-left:3px}.week-overview-metrics>span:first-child{font-size:10px;letter-spacing:.5px;color:#9aa293}.week-group-legend{display:flex;align-items:center;gap:4px;flex-wrap:wrap}.week-group-chip{display:inline-flex;align-items:center;gap:6px;border:1px solid transparent;padding:6px 9px;font-size:11px;color:#899280;background:transparent}.week-group-chip.active{background:#f0f5ec;border-color:#e1e9d9;color:#4d6946}.week-group-chip i{width:7px;height:7px;border-radius:50%;display:inline-block}.week-group-chip small{font-size:10px;color:#98a18f;margin-left:2px}.week-view-scroll{max-height:calc(100vh - 332px);min-height:360px;overflow:auto;overscroll-behavior:contain;scrollbar-width:thin;scrollbar-color:#d9e2d3 transparent}.week-view-canvas{min-width:1004px}.week-view-head,.week-view-grid{display:grid;grid-template-columns:52px repeat(7,minmax(136px,1fr))}.week-view-head{position:sticky;top:0;z-index:5;background:#fff;border-bottom:1px solid #dfe7d9}.week-axis-head{position:sticky;left:0;background:#fff;z-index:6;color:#a0a89a;display:flex;align-items:center;justify-content:center;flex-direction:column;gap:9px;font-size:10px}.week-axis-head small{font-size:8px}.week-day-head{padding:15px 11px 13px;border-left:1px solid var(--line);min-width:0;background:#fff}.week-day-head.is-selected{background:#f5f8f1}.week-day-title{display:flex;align-items:center;justify-content:space-between;margin-bottom:12px}.week-day-title strong{font-size:13px;font-weight:550;color:#4d6047}.week-day-title>span{font-size:10px;color:#98a18e}.week-template-select{width:100%;max-width:100%;border:1px solid #e3e9de;border-radius:7px;background:#fafbf8;color:#63795a;padding:7px 5px;font-size:10px;outline-offset:1px;cursor:pointer}.week-day-source{display:flex;justify-content:space-between;gap:5px;font-size:9px;color:#99a28f;margin-top:11px;margin-bottom:8px}.week-day-source .cycle-source{color:#66805b}.week-flow{display:flex;height:4px;gap:1px;border-radius:3px;overflow:hidden;background:#edf1e8}.week-flow span{min-width:0;height:100%}.week-flow-free{background:#edf1e8}.week-flow-busy.is-muted{opacity:.3}.week-view-grid{position:relative}.week-time-axis{position:sticky;left:0;z-index:3;background:#fff;color:#a1aa98}.week-axis-slot{height:26px;position:relative}.week-axis-slot span{position:absolute;top:3px;right:11px;font-size:9px;line-height:1}.week-day-column{position:relative;border-left:1px solid #e8ede3;background:#fff;min-width:0}.week-view-grid>.week-day-column:is([data-weekday="5"],[data-weekday="6"]){background:#fcfdfb}.week-time-cell{height:26px;border-top:1px dashed #f0f3ec;cursor:crosshair}.week-time-cell.hour{border-top:1px solid #e8ede3}.week-time-cell:hover{background:#edf5e7}.week-time-cell.drag-target{background:#dcebd2!important}.week-event{position:absolute;z-index:2;left:4px;right:4px;width:calc(100% - 8px);min-height:23px;padding:7px 6px;border:0;border-left:3px solid var(--event-accent,#86a995);border-radius:5px;background:var(--event-bg,#c8ddcf);color:var(--event-text,#324139);text-align:left;cursor:grab;overflow:hidden;line-height:1.25;touch-action:pan-y;transition:opacity .12s,box-shadow .12s}.week-event:hover{box-shadow:0 2px 8px #23351e13;filter:brightness(.98)}.week-event:active{cursor:grabbing}.week-event strong{display:block;font-size:11px;font-weight:550;overflow:hidden;white-space:nowrap;text-overflow:ellipsis}.week-event small{display:block;font-size:9px;opacity:.65;margin-top:5px;white-space:nowrap}.week-event em{display:block;font-style:normal;font-size:9px;opacity:.55;margin-top:7px;overflow:hidden;white-space:nowrap;text-overflow:ellipsis}.week-event.short{padding-top:4px;padding-bottom:2px}.week-event.is-dimmed{opacity:.25}.week-event.done strong{text-decoration:line-through}.week-event.done{background:#f1f3ef;border-left-color:#b6c0b5;color:#7c887c}.week-view-footer{padding:13px 20px;border-top:1px solid var(--line);display:flex;justify-content:space-between;align-items:center;gap:10px;color:#9aa28f;font-size:10px;line-height:1.7}.week-template-preview{height:145px;display:grid;grid-template-columns:repeat(7,minmax(0,1fr));gap:5px;background:#f6f8f2;padding:14px 9px;border-radius:10px;margin-bottom:21px}.week-template-preview-day{display:flex;align-items:center;flex-direction:column;min-width:0;gap:9px}.week-template-preview-day>small{font-size:10px;color:#8e9d83}.week-template-preview-bar{height:72px;width:100%;display:flex;justify-content:flex-end;flex-direction:column;gap:2px;overflow:hidden}.week-template-preview-bar>span{display:block;width:100%;min-height:3px;border-radius:3px;opacity:.65}.week-template-preview-day>span{font-size:8px;color:#9aa48f;max-width:100%;overflow:hidden;white-space:nowrap;text-overflow:ellipsis}.week-card-title{display:flex;align-items:center;justify-content:space-between;gap:8px;flex-wrap:wrap}.week-template-card .template-info{gap:10px;flex-wrap:wrap}.week-cycle-button{display:block;width:100%;min-height:42px;margin-top:12px;background:#eef5ec;border:1px solid #a7bfa9;font-size:12px;font-weight:600;color:#3d6047}.week-cycle-button:hover{background:#e1eddd;border-color:#7b9c80}
+@media(max-width:1100px){.week-view-summary{padding:15px 17px;gap:12px}.week-view-scroll{max-height:calc(100vh - 350px)}.week-view-footer{flex-wrap:wrap}}
+@media(max-width:720px){.week-view-summary{padding:14px;display:block}.week-overview-metrics{gap:13px;font-size:10px;margin-bottom:12px}.week-group-legend{gap:3px}.week-group-chip{padding:5px 7px;font-size:10px}.week-group-chip small{font-size:9px}.week-view-scroll{max-height:calc(100dvh - 380px);min-height:340px}.week-view-canvas{min-width:980px}.week-view-head,.week-view-grid{grid-template-columns:42px repeat(7,minmax(134px,1fr))}.week-axis-slot span{right:7px;font-size:8px}.week-axis-head{font-size:9px}.week-axis-head small{font-size:7px}.week-day-head{padding:13px 10px 11px}.week-view-footer{padding:10px 14px;font-size:9px}.week-view-footer>span:last-child{max-width:100%}.week-template-preview{height:131px}.week-template-preview-day>span{font-size:9px}.week-template-preview-bar{height:61px}.week-template-card .actions button{font-size:11px}}
+@media (max-width: 600px) {
+  .week-intro { display: block; }
+  .week-intro .intro-actions { margin-top: 16px; flex-direction: row; justify-content: flex-start; flex-wrap: wrap; }
+  .week-intro h1 { font-size: 25px; }
+}
+/* A planning day spans 04:00 to 04:00 the following calendar date. */
+.week-view-canvas{min-width:1016px}.week-view-head,.week-view-grid{grid-template-columns:64px repeat(7,minmax(136px,1fr))}.week-view-grid{margin-bottom:18px}.week-axis-slot span{right:8px;white-space:nowrap}.week-axis-slot.next-day{color:#66805b}.week-axis-end{position:absolute;bottom:-13px;left:0;right:0;text-align:right;padding-right:8px;font-size:9px;line-height:1;color:#66805b;white-space:nowrap}.week-time-cell.next-day{background:#f8faf5}.week-time-cell.midnight{border-top:1px solid #c5d6bb}.week-time-cell.next-day:hover{background:#edf5e7}.week-overview-metrics>span:first-child{line-height:1.6}
+@media(max-width:720px){.week-view-canvas{min-width:998px}.week-view-head,.week-view-grid{grid-template-columns:60px repeat(7,minmax(134px,1fr))}.week-axis-slot span,.week-axis-end{font-size:8px;padding-right:0}.week-axis-end{right:8px}.week-overview-metrics>span:first-child{flex-basis:100%;margin-bottom:1px}}
+
+/* Plan and actual columns share one scroll area and one time axis. */
+.week-view-canvas.is-compare{min-width:2024px}
+.is-compare .week-view-head,.is-compare .week-view-grid{grid-template-columns:64px repeat(7,minmax(280px,1fr))}
+.week-day-pair{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));min-width:0}
+.week-actual-column{position:relative;border-left:1px solid #e1e7df;background:#fafcf9;min-width:0}
+.week-actual-column .week-time-cell{cursor:default}
+.week-actual-column .week-time-cell:hover{background:transparent}
+.week-actual-column .week-time-cell.next-day:hover{background:#f8faf5}
+.week-actual-caption{font-size:11px;line-height:29px;color:#55735b}
+.week-column-labels{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));margin:11px -11px -13px;border-top:1px solid var(--line);font-size:10px;text-align:center;line-height:27px;color:#7f8d79}
+.week-column-labels span:last-child{border-left:1px solid var(--line);background:#f4f8f1;color:#55735b}
+.week-event{display:flex;align-items:flex-start;gap:5px;padding:6px 5px}
+.week-event-main{flex:1;min-width:0;overflow:hidden}
+.week-event .check{margin:0;width:18px;height:18px;min-width:18px}
+.week-event .check svg{width:12px;height:12px;stroke-width:3}
+.week-event.done .check{background:#416b57;border-color:#416b57;color:#fff}
+.week-event.done .check:hover{background:#345944;border-color:#345944}
+.week-event>button:not(.check){flex:0 0 18px;width:18px;height:18px;padding:0;display:inline-flex;align-items:center;justify-content:center;line-height:1;font-size:11px;border-radius:50%}
+.week-event>button:not(.check) svg{width:12px;height:12px;margin:0}
+.week-event.short{align-items:center;gap:4px;padding-top:2px;padding-bottom:2px}
+.week-event small{margin-top:3px}
+.week-event em{margin-top:4px}
+.week-event:focus-visible{outline:2px solid #416b57;outline-offset:-2px}
+@media(max-width:720px){.week-view-canvas.is-compare{min-width:2020px}.is-compare .week-view-head,.is-compare .week-view-grid{grid-template-columns:60px repeat(7,minmax(280px,1fr))}.week-column-labels{margin-left:-10px;margin-right:-10px;margin-bottom:-11px}}
+/* Projects describe ownership; only tags carry color. */
+.week-view-summary{row-gap:10px}
+.week-view-filters{display:flex;flex-direction:column;gap:5px;width:100%;min-width:0}
+.week-tag-legend{display:flex;align-items:center;gap:4px;flex-wrap:wrap}
+.week-filter-label{font-size:10px;color:#8b9587;min-width:28px;flex-shrink:0}
+.week-group-chip{min-width:0;max-width:100%}
+.week-group-chip>span{min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.week-group-chip i,.week-group-chip small{flex-shrink:0}
+@media(max-width:720px){.week-tag-legend{gap:3px}.week-view-filters{gap:4px}}
+.week-event.done{background:color-mix(in srgb,var(--event-accent,#86a995) 10%,white);border-left-color:var(--event-accent,#86a995);color:#7c887c}
+.event.tag-slot,.week-event.tag-slot{
+ border:1px dashed var(--event-accent);border-left:3px solid var(--event-accent);
+ background:color-mix(in srgb,var(--event-accent) 10%,white);
+}
+.slot-add{flex:none;margin-left:auto;line-height:1.2;font-weight:600}
+
+/* Mobile week view: keep actions visible, fold statistics, and swipe one day at a time. */
+.week-view-pager,.week-view-strip{display:contents}
+.week-day-stops,.week-axis-head:not(:first-child),.week-time-axis:not(:first-child){display:none}
+.week-stats-toggle,.week-day-details-toggle{display:none}
+.week-overview-metrics>span:first-child{font-size:inherit;letter-spacing:normal;color:inherit;line-height:inherit}
+@media(max-width:720px){
+ .week-page .week-intro{display:block;margin-bottom:12px}
+ .week-page .week-intro>div:first-child>p{display:none}
+ .week-page .week-intro h1{font-size:23px;line-height:1.3}
+ .week-page .week-intro .intro-actions{max-width:none;flex-direction:row;justify-content:flex-start;flex-wrap:wrap;margin-top:10px;gap:6px}
+ .week-page .week-intro .intro-actions button{min-height:34px;padding:6px 10px;font-size:11px}
+ .week-page .week-control{margin:0 0 12px;gap:8px}
+ .week-page .week-control .date-controls{gap:4px}
+ .week-page .week-control .date-controls button{padding-left:8px;padding-right:8px}
+ .week-tracking-summary{padding:9px 10px;margin-bottom:12px}
+ .week-tracking-summary .tracking-summary-top{gap:7px}
+ .week-tracking-summary .tracking-modes{width:100%}
+ .week-tracking-summary .tracking-modes button{flex:1;white-space:nowrap;padding:6px 7px}
+ .week-tracking-summary .tracking-summary-actions{width:100%;margin-left:0;gap:5px}
+ .week-tracking-summary .tracking-summary-actions button{font-size:11px;min-height:32px;padding:5px 7px;white-space:nowrap}
+ .week-tracking-summary .week-stats-toggle{display:inline-flex;align-items:center;gap:5px;margin-left:auto}
+ .week-tracking-summary[data-stats-expanded=false] #week-statistics-content{display:none}
+ .week-tracking-summary[data-stats-expanded=true] #week-statistics-content{padding-top:3px}
+ .week-page .weekly-panel[data-stats-expanded=false] .week-view-summary{display:none}
+ .week-page .week-template-stats-toggle{display:flex;align-items:center;gap:6px;margin:6px 10px;min-height:32px;font-size:11px}
+ .week-page .week-view-summary{padding:10px 12px}
+ .week-page .week-overview-metrics{gap:6px 13px;margin-bottom:7px}
+ .week-page .week-overview-metrics>span:first-child{flex-basis:auto;font-size:inherit;margin-bottom:0}
+ .week-page .week-view-filters{gap:3px}
+ .week-page .week-group-legend,.week-page .week-tag-legend{flex-wrap:nowrap;overflow-x:auto;overscroll-behavior-x:contain;scrollbar-width:none}
+ .week-page .week-group-legend::-webkit-scrollbar,.week-page .week-tag-legend::-webkit-scrollbar{display:none}
+ .week-page .week-group-chip{flex-shrink:0;max-width:220px;padding:5px 7px}
+ .week-view-pager{display:block;overflow-x:auto;overflow-y:hidden;overscroll-behavior-x:contain;scroll-snap-type:x mandatory;scrollbar-width:none}
+ .week-view-strip{display:block;position:relative;width:700%}
+ .week-day-stops{position:absolute;inset:0;display:grid;grid-template-columns:repeat(7,minmax(0,1fr));pointer-events:none}
+ .week-day-stops>i{scroll-snap-align:none start;scroll-snap-stop:always}
+ .week-page .week-view-scroll{height:calc(100vh - 340px);height:calc(100dvh - 340px);max-height:720px;min-height:360px;overflow-x:hidden;overflow-y:auto;overscroll-behavior:auto;scrollbar-width:none}
+ .week-view-pager::-webkit-scrollbar,.week-page .week-view-scroll::-webkit-scrollbar{display:none}
+ .week-page .week-view-canvas,.week-page .week-view-canvas.is-compare{min-width:0}
+ .week-page .week-view-head,.week-page .week-view-grid{grid-template-columns:repeat(7,60px minmax(0,1fr))}
+ .week-page .week-axis-head{display:flex;position:relative}
+ .week-page .week-time-axis{display:block;position:relative}
+ .week-page .week-day-head{padding:9px 10px 8px}
+ .week-page .week-day-title{margin-bottom:0;gap:8px;min-height:28px}
+ .week-page .week-day-title>span{margin-left:auto}
+ .week-page .week-day-details-toggle{display:inline-flex;align-items:center;gap:3px;font-size:10px;min-height:28px;padding:3px 5px;white-space:nowrap}
+ .week-page .week-day-head[data-details-expanded=false] .week-day-details{display:none}
+ .week-page .week-day-head[data-details-expanded=true] .week-day-details{padding-top:7px}
+ .week-page .week-template-select{padding:5px}
+ .week-page .week-day-source{margin-top:6px;margin-bottom:5px}
+ .week-page .week-column-labels{margin-top:7px;margin-bottom:-8px;line-height:23px}
+ .week-page .time-shares-wrap.compact{margin-top:6px;gap:4px}
+ .week-page .time-shares.compact>summary{padding:5px 7px}
+ .week-page .time-shares.compact .time-shares-heading>small{width:auto;margin-left:auto;order:0}
+ .week-page .week-event{touch-action:pan-x pan-y}
+ .week-page .week-view-footer{padding:8px 12px;gap:3px 10px;line-height:1.6}
+}
