@@ -4,6 +4,8 @@
 
 <h1 align="center">周谱 · weekprofiler</h1>
 
+<p align="center"><strong>开发说明：本项目基本完全由 AI 开发。</strong></p>
+
 <p align="center"><strong>给一周定节奏，让计划与真实投入一起可见。</strong></p>
 <p align="center">周循环 · 日 / 周模板 · 任务计时 · 耗时占比 · 免费自托管同步</p>
 <p align="center">
