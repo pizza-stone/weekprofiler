@@ -12,7 +12,7 @@
   <a href="docs/offline-usage.md">使用与迁移说明</a>
 </p>
 <p align="center"><strong>使用离线核心功能，无需安装 Node.js、联网或注册 Google 账号。</strong></p>
-<p align="center">下载文件需要联网；当前仓库为私有，下载需要 GitHub 仓库访问权限。</p>
+<p align="center">下载文件需要联网；拿到文件后，离线使用无需账号。</p>
 
 <p align="center"><strong>给一周定节奏，让计划与真实投入一起可见。</strong></p>
 <p align="center">周循环 · 日 / 周模板 · 任务计时 · 耗时占比 · 免费自托管同步</p>
