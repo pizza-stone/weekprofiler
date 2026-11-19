@@ -6,6 +6,14 @@
 
 <p align="center"><strong>开发说明：本项目基本完全由 AI 开发。</strong></p>
 
+<p align="center">
+  <a href="https://github.com/pizza-stone/weekprofiler/releases/latest/download/weekprofiler-preview.html"><strong>下载离线版 · 双击即用</strong></a> ·
+  <a href="https://github.com/pizza-stone/weekprofiler/releases/latest">发行说明</a> ·
+  <a href="docs/offline-usage.md">使用与迁移说明</a>
+</p>
+<p align="center"><strong>使用离线核心功能，无需安装 Node.js、联网或注册 Google 账号。</strong></p>
+<p align="center">下载文件需要联网；当前仓库为私有，下载需要 GitHub 仓库访问权限。</p>
+
 <p align="center"><strong>给一周定节奏，让计划与真实投入一起可见。</strong></p>
 <p align="center">周循环 · 日 / 周模板 · 任务计时 · 耗时占比 · 免费自托管同步</p>
 <p align="center">
@@ -128,7 +136,20 @@
 
 ## 快速开始
 
-### 本机离线使用
+### 下载后直接使用
+
+1. 下载 **[weekprofiler-preview.html](https://github.com/pizza-stone/weekprofiler/releases/latest/download/weekprofiler-preview.html)**，也可以进入 [Release 页面](https://github.com/pizza-stone/weekprofiler/releases/latest)的 Assets 下载同名文件。
+2. 把文件放在一个固定位置，双击并用浏览器打开。
+3. 开始整理任务、创建模板、安排一周并计时。
+
+文件已包含完整界面。**首次打开和日常离线使用都无需安装 Node.js、启动服务器、联网或注册 Google 账号。** 这包括任务、模板、排程、计时和统计；可选的 AI 测试功能需要[额外配置](#ai)。
+
+第一次使用，可以把内置的「创作日」应用到今天，点开「创作」预留时段选择任务，再点 `▶` 开始计时。也可以先从「任务」整理自己的清单，再创建适合自己的模板。
+
+日程保存在当前浏览器中，**不会写回 HTML 文件**。复制 HTML 只会复制程序；迁移自己的任务与日程，请导出、导入 JSON 备份。建议固定浏览器和文件位置，定期通过「导出与备份」保存完整备份。详见[离线使用与迁移说明](docs/offline-usage.md)。
+
+<details>
+<summary>开发者：从源码生成离线版（需要 Node.js）</summary>
 
 下载或克隆仓库，安装 **Node.js 24 或更新版本**，在项目目录执行：
 
@@ -136,9 +157,9 @@
 node portable.mjs
 ```
 
-双击生成的 **`weekprofiler-preview.html`** 即可开始。生成后的文件内含完整界面，可以离线打开，也可以单独复制到另一台电脑。日程保存在当前浏览器中。
+双击生成的 **`weekprofiler-preview.html`** 即可开始。Node.js 仅用于生成文件，使用生成后的 HTML 不再需要它。
 
-第一次使用，可以把内置的「创作日」应用到今天，点开「创作」预留时段选择任务，再点 `▶` 开始计时。也可以先从「任务」整理自己的清单，再创建适合自己的模板。
+</details>
 
 <details>
 <summary>想体验截图中的虚构周表？</summary>
@@ -154,6 +175,10 @@ node portable.mjs
 ### 手机与电脑同步
 
 按[个人云同步部署指南](docs/cloudflare-setup.md)创建自己的实例。两端打开同一网址并登录；手机可通过浏览器的“添加到主屏幕”保存入口。
+
+**离线版的数据可以迁移到云同步版。** 先从离线页面导出完整 JSON 备份，部署并登录自己的云同步版，再通过「设置 → 从 JSON 备份恢复」导入。导入会替换云端当前内容，请先备份并核对预览；同步完成后，其他设备打开同一网址登录即可。HTML 文件本身不会自动变成云端服务。
+
+Google 账号用于云同步版的身份验证，数据存放在自己的 Cloudflare D1 中。离线使用不需要 Google 账号。详见[从离线版迁移到云同步版](docs/offline-usage.md#迁移到云同步版)。
 
 | 使用方式 | 数据保存位置 |
 | --- | --- |
