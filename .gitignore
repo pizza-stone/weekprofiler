@@ -1,0 +1,38 @@
+# Generated builds and preview exports (keep the root standalone HTML entries).
+/dist/
+/outputs/
+
+# Local dependencies, runtime data, and logs.
+node_modules/
+/.sites-runtime/
+/.wrangler/
+/.openai/
+/wrangler.jsonc
+coverage/
+*.log
+*.sqlite
+*.sqlite-*
+*.sqlite3
+*.sqlite3-*
+*.db
+*.db-*
+
+# Environment configuration, credentials, and personal schedule backups.
+.env
+.env.*
+!.env.example
+.dev.vars
+.dev.vars.*
+*.pem
+*.key
+dayloom-backup-*.json
+weekprofiler-backup-*.json
+
+# Operating system and editor files.
+.DS_Store
+Thumbs.db
+Desktop.ini
+*.swp
+*.swo
+.idea/
+.vscode/
